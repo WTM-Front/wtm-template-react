@@ -27,36 +27,6 @@
                     "Children": []
                 }
             ]
-        },
-        {
-            "Key": "206d29ca-b738-40f6-8b71-439a9a08bec6",
-            "Name": "测试",
-            "Icon": "save",
-            "Path": "/test",
-            "Component": "test",
-            "Action": [
-                "install",
-                "update",
-                "delete",
-                "import",
-                "export"
-            ],
-            "Children": []
-        },
-        {
-            "Key": "c24fe5d8-0603-475f-80ae-62d14f809a86",
-            "Name": "测试",
-            "Icon": "menu-fold",
-            "Path": "/testaaa",
-            "Component": "testaaa",
-            "Action": [
-                "install",
-                "update",
-                "delete",
-                "import",
-                "export"
-            ],
-            "Children": []
         }
     ]
 }
