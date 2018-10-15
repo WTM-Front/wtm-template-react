@@ -1,0 +1,50 @@
+{
+    "type": "typescript",
+    "frame": "react",
+    "registerHelper": "wtmfront/registerHelper",
+    "template": "wtmfront/template",
+    "subMenu": "src/app/subMenu.json",
+    "containers": "src/containers",
+    "api": "http://10.99.246.52:8010",
+    "swaggerDoc": "http://localhost:8765/api-docs",
+    "standard": {
+        "search": {
+            "name": "search",
+            "type": "Post"
+        },
+        "details": {
+            "name": "get/{id}",
+            "type": "Get"
+        },
+        "install": {
+            "name": "add",
+            "type": "Post"
+        },
+        "update": {
+            "name": "edit",
+            "type": "Post"
+        },
+        "delete": {
+            "name": "delete",
+            "type": "Post"
+        },
+        "import": {
+            "name": "import",
+            "type": "Post"
+        },
+        "export": {
+            "name": "export",
+            "type": "Post"
+        },
+        "template": {
+            "name": "template",
+            "type": "Post"
+        }
+    },
+    "publicStandard": [
+        "common"
+    ],
+    "excludeStandard": [
+        "rabbitmq"
+    ]
+}
