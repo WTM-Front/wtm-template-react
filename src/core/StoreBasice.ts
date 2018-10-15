@@ -8,10 +8,11 @@
 import { message } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import NProgress from 'nprogress';
-import wtmfront from 'wtmfront.json';
+import wtmfront from 'wtmfront';
 import Common from './Common';
 import { HttpBasics } from './HttpBasics';
 import SwaggerModel from "./SwaggerModel";
+const { include } = wtmfront;
 export default class Store extends SwaggerModel {
   constructor(public StoreConfig) {
     super();
@@ -125,7 +126,7 @@ export default class Store extends SwaggerModel {
       pageSize = this.searchParams.pageSize
       delete this.searchParams.pageSize
     }
-    const result = await this.Http.create(wtmfront.standard.search, {
+    const result = await this.Http.create(include.search, {
       pageNo: pageNo,
       pageSize: pageSize,
       search: this.searchParams
@@ -149,7 +150,7 @@ export default class Store extends SwaggerModel {
    */
   async onGetDetails(params) {
     this.onPageState("loadingEdit", true)
-    const result = await this.Http.create(wtmfront.standard.details, params).toPromise()
+    const result = await this.Http.create(include.details, params).toPromise()
     this.onPageState("loadingEdit", false)
     return result || {}
   }
@@ -174,7 +175,7 @@ export default class Store extends SwaggerModel {
    * @param params 数据实体
    */
   async onInstall(params) {
-    const result = await this.Http.create(wtmfront.standard.install, params).toPromise()
+    const result = await this.Http.create(include.install, params).toPromise()
     if (result) {
       message.success('添加成功')
       // 刷新数据
@@ -191,7 +192,7 @@ export default class Store extends SwaggerModel {
    * @param params 数据实体
    */
   async onUpdate(params) {
-    const result = await this.Http.create(wtmfront.standard.update, params).toPromise()
+    const result = await this.Http.create(include.update, params).toPromise()
     if (result) {
       message.success('更新成功')
       // 刷新数据
@@ -209,7 +210,7 @@ export default class Store extends SwaggerModel {
    */
   async onDelete(params: any[]) {
     params = params.map(x => x[this.IdKey])
-    const result = await this.Http.create(wtmfront.standard.delete, params).toPromise()
+    const result = await this.Http.create(include.delete, params).toPromise()
     if (result) {
       message.success('删除成功')
       this.onSelectChange([]);
@@ -225,7 +226,7 @@ export default class Store extends SwaggerModel {
    * https://ant.design/components/upload-cn/#components-upload-demo-picture-style
    */
   @computed get importConfig() {
-    const action = this.Http.address + wtmfront.standard.import.name
+    const action = this.Http.address + include.import.name
     return {
       name: 'file',
       multiple: true,
@@ -258,7 +259,7 @@ export default class Store extends SwaggerModel {
    */
   async onExport(params = this.searchParams) {
     await this.Http.download({
-      url: APIADDRESS + this.StoreConfig.address + wtmfront.standard.export.name,
+      url: APIADDRESS + this.StoreConfig.address + include.export.name,
       body: params
     })
   }
@@ -266,9 +267,9 @@ export default class Store extends SwaggerModel {
   * 模板
   */
   async onTemplate() {
-    //   url: APIADDRESS + this.StoreConfig.address + wtmfront.standard.template.name,
+    //   url: APIADDRESS + this.StoreConfig.address + include.template.name,
     await this.Http.download({
-      url: APIADDRESS + this.StoreConfig.address + wtmfront.standard.template.name,
+      url: APIADDRESS + this.StoreConfig.address + include.template.name,
     })
   }
   /**

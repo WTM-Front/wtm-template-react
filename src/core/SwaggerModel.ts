@@ -1,11 +1,7 @@
-import { message } from 'antd';
-import { action, computed, observable, runInAction } from 'mobx';
-import NProgress from 'nprogress';
-import wtmfront from 'wtmfront.json';
-import Common from './Common';
-import lodash from 'lodash';
-import { HttpBasics } from './HttpBasics';
 import { ColumnProps } from 'antd/lib/table';
+import lodash from 'lodash';
+import { action, computed, observable, runInAction } from 'mobx';
+import Common from './Common';
 /** 编辑属性 */
 interface Ifield {
     type: string;

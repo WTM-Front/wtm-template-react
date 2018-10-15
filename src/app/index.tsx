@@ -20,11 +20,10 @@ import store from 'store/index';
 import layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
-import swagger, { Entrance } from "./pages/swagger/index";
+// import swagger, { Entrance } from "./pages/swagger/index";
 import System from "./pages/system";
 import user from "./pages/user";
 import './style.less';
-
 
 @observer
 export default class RootRoutes extends React.Component<any, any> {
@@ -32,12 +31,6 @@ export default class RootRoutes extends React.Component<any, any> {
      * 路由列表
      */
     routes: any[] = [
-        {
-            // swagger 解析
-            path: "/swaggerAnalysis",
-            exact: true,
-            component: this.createCSSTransition(swagger),
-        },
         {
             /**
              * 主页布局 
@@ -210,7 +203,7 @@ export default class RootRoutes extends React.Component<any, any> {
             return <LocaleProvider locale={zhCN}>
                 <>
                     {renderRoutes(this.routes)}
-                    <Entrance />
+                    {/* <Entrance /> */}
                 </>
             </LocaleProvider>
         }

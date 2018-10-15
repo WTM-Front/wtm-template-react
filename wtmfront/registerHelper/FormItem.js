@@ -31,14 +31,6 @@ module.exports = (Handlebars) => {
         }
     }
     Handlebars.registerHelper('EditFormItem', function (person) {
-        // return person.filter(x => x.attribute.available).map(x => {
-        //     const dec = typeAnalysis(x);
-        //     return `<FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-        //     {getFieldDecorator('${x.key}',${dec.config})(
-        //     ${dec.FormItem}
-        //     )}
-        // </FormItem> `renderDataEntry
-        // }).join('\n         ');
         return person.filter(x => x.attribute.available).map(x => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
@@ -53,16 +45,6 @@ module.exports = (Handlebars) => {
         }).join('\n         ');
     });
     Handlebars.registerHelper('HeaderFormItem', function (person) {
-        // return person.filter(x => x.attribute.available).map(x => {
-        //     const dec = typeAnalysis(x);
-        //     return `<Col {...colLayout} >
-        //     <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-        //     {getFieldDecorator('${x.key}')(
-        //         ${dec.FormItem}
-        //     )}
-        //     </FormItem>
-        // </Col> `
-        // }).join('\n         ');
         return person.filter(x => x.attribute.available).map(x => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);

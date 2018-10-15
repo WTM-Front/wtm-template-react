@@ -42,6 +42,21 @@
                 "export"
             ],
             "Children": []
+        },
+        {
+            "Key": "c24fe5d8-0603-475f-80ae-62d14f809a86",
+            "Name": "测试",
+            "Icon": "menu-fold",
+            "Path": "/testaaa",
+            "Component": "testaaa",
+            "Action": [
+                "install",
+                "update",
+                "delete",
+                "import",
+                "export"
+            ],
+            "Children": []
         }
     ]
 }
