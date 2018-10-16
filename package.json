@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --env.type=dev",
+    "start:host": "webpack-dev-server --open --host 0.0.0.0 --env.type=dev",
     "wtm": "wtm server",
     "swagger": "cd ./swagger & npm start",
     "build": "webpack --progress --env.type=deploy",
