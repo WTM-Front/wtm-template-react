@@ -22,7 +22,6 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 // import swagger, { Entrance } from "./pages/swagger/index";
 import System from "./pages/system";
-import user from "./pages/user";
 import './style.less';
 
 @observer
@@ -48,11 +47,6 @@ export default class RootRoutes extends React.Component<any, any> {
                     path: "/system",
                     exact: true,
                     component: this.createCSSTransition(System)
-                },
-                {
-                    path: "/user",
-                    exact: true,
-                    component: this.createCSSTransition(user)
                 },
                 ...this.initRouters(),
                 // 404  首页

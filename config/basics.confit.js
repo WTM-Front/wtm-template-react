@@ -2,12 +2,10 @@ const webpack = require('webpack');
 const path = require('path');
 const moment = require('moment');
 const HtmlWebpackPlugin = require('html-webpack-plugin');//模板
-const CleanWebpackPlugin = require('clean-webpack-plugin');//清理
 const CopyWebpackPlugin = require('copy-webpack-plugin');//拷贝
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");//提取css
 const tsImportPluginFactory = require('ts-import-plugin');//按需导入
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CompressionPlugin = require("compression-webpack-plugin")
 const rootDir = path.dirname(__dirname);
 const time = moment().format('YYYY-MM-DD HH:mm:ss');
 module.exports = (params) => {
@@ -123,7 +121,7 @@ module.exports = (params) => {
                     test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
                     use: [
                         'url-loader?limit=50000&name=[path][name].[ext]',
-                        'image-webpack-loader',
+                        // 'image-webpack-loader',
                     ]
                 },
             ],
