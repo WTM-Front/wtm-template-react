@@ -1,4 +1,5 @@
 module.exports = {
+    type: "React",
     // 服务器端口地址
     serverPort: 8765,
     // helper 路径
