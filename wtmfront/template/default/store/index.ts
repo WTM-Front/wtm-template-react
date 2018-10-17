@@ -1,6 +1,6 @@
 import StoreBasice from 'store/table';
 import Swagger from '../pageConfig.json';
-export class Store extends storeBasice {
+export class Store extends StoreBasice {
     constructor() {
         super({
             // api 地址前缀

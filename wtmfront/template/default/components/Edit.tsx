@@ -7,7 +7,7 @@
 */
 import { Form, Button, Popconfirm, Divider } from 'antd';
 import DataEntry from 'components/table/dataEntry';
-import TableEdit, { renderItemParams } from 'components/table/tableEdit';
+import TableEdit from 'components/table/tableEdit';
 import * as React from 'react';
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -24,7 +24,7 @@ const formItemLayout = {
  * 组件继承 支持重写,
  */
 export default class EditComponent extends TableEdit {
-    renderItem({ form, initialValue }: renderItemParams) {
+    renderItem({ form, initialValue }) {
         const { getFieldDecorator } = form;
         return <>
             {{{EditFormItem install}}}
