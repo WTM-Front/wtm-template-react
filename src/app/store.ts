@@ -34,7 +34,7 @@ export class Store {
         this.setSubMenu(subMenu)
     }
     /** 菜单展开 收起 */
-    @observable collapsed = true;
+    @observable collapsed = false;
     /** 菜单 */
     @observable subMenu: subMenu[] = [];
     /**  设置菜单 */
