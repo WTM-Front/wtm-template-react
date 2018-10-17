@@ -51,7 +51,7 @@ export default class RootRoutes extends React.Component<any, any> {
                 ...this.initRouters(),
                 // 404  首页
                 {
-                    component: this.createCSSTransition(this.NoMatch)
+                    component: this.createCSSTransition(NoMatch)
                 }
             ]
         }
@@ -66,15 +66,6 @@ export default class RootRoutes extends React.Component<any, any> {
                 "component": this.Loadable(component)
             };
         })
-    }
-    /**
-     * 404 
-     * @param param0 
-     */
-    NoMatch({ location }) {
-        return (
-            <Exception type="404" desc={<h3>无法匹配 <code>{location.pathname}</code></h3>} />
-        )
     }
 
     // 组件加载动画
@@ -149,6 +140,11 @@ export default class RootRoutes extends React.Component<any, any> {
                         </div>} />
                     );
                 }
+                if (Component == NoMatch) {
+                    return <Animate transitionName={classNames}
+                        transitionAppear={true} component="" key={Component.name} ><NoMatch {...this.props} />
+                    </Animate>
+                }
                 // 认证通过
                 if (Store.Authorize.onPassageway(this.props)) {
                     return (
@@ -160,10 +156,13 @@ export default class RootRoutes extends React.Component<any, any> {
                         </Animate  >
                     );
                 }
-                return <Exception type="404" desc={<h3>无权限访问
+                return <Animate transitionName={classNames}
+                    transitionAppear={true} component="" key={Component.name} >
+                    <Exception type="404" desc={<h3>无权限访问 {this.props.location.pathname}
                     <span>认证位置：store/system/authorize.ts</span>
-                    <code>{location.pathname}</code>
-                </h3>} />
+                        <code>{location.pathname}</code>
+                    </h3>} />
+                </Animate  >
             }
         }
     };
@@ -195,4 +194,9 @@ export default class RootRoutes extends React.Component<any, any> {
         );
     }
 
+}
+class NoMatch extends React.Component<any, any> {
+    render() {
+        return <Exception type="404" desc={<h3>无法匹配 <code>{this.props.location.pathname}</code></h3>} />
+    }
 }
