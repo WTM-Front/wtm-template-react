@@ -63,7 +63,7 @@ module.exports = (params) => {
                 "core": path.resolve(rootDir, 'src', 'core'),
                 "store": path.resolve(rootDir, 'src', 'store'),
                 "utils": path.resolve(rootDir, 'src', 'utils'),
-                "wtmfront": path.resolve(rootDir, "wtmfront.config.js")
+                "@WTMConfig": path.resolve(rootDir, "wtmfront.config.js")
             },
             ...resolve,
         },

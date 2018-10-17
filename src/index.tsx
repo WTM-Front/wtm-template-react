@@ -5,8 +5,8 @@
  * @modify date 2018-09-10 02:18:59
  * @desc [description]
 */
-// import "../node_modules/antd/dist/antd.less"; 这种方式 production 模式生成文件。
 /// <reference path="../typings/index.d.ts" />
+/// <reference path="../typings/swagger.d.ts" />
 import 'babel-polyfill';
 require('antd/dist/antd.less')
 require('ant-design-pro/dist/ant-design-pro.css')

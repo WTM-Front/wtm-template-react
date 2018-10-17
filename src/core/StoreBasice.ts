@@ -8,7 +8,7 @@
 import { message } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import NProgress from 'nprogress';
-import wtmfront from 'wtmfront';
+import wtmfront from '@WTMConfig';
 import Common from './Common';
 import { HttpBasics } from './HttpBasics';
 import SwaggerModel from "./SwaggerModel";

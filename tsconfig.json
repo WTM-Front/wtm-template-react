@@ -1,19 +1,18 @@
 {
   "compilerOptions": {
-    /* Basic Options */
-    "locale": "zh-CN",
-    "target": "es5", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
-    "module": "esnext", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "locale": "en-us",
+    "target": "es5", 
+    "module": "esnext",
     "lib": [
       "dom",
       "esnext",
-    ], /* Specify library files to be included in the compilation. */
-    "allowJs": true, /* Allow javascript files to be compiled. */
-    "jsx": "react", /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
-    "sourceMap": true, /* Generates corresponding '.map' file. */
-    "downlevelIteration": true, /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
-    "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "baseUrl": "src", /* Base directory to resolve non-absolute module names. */
+      "esnext.array",
+      "esnext.asynciterable",
+      "esnext.intl",
+      "esnext.symbol",
+    ],
+    "baseUrl": "src",
+    "rootDir": ".",
     "paths": {
       "app": ["app/*"],
       "assets": ["assets/*"],
@@ -21,14 +20,18 @@
       "containers": ["containers/*"],
       "core":["core/*"],
       "store": ["store/*"],
-      "utils": ["utils/*"],
-      "wtmfront":["../wtmfront.config.js"]
-    }, /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
-    "allowSyntheticDefaultImports": true, /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
-    "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
-    "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
+      "utils": ["utils/*"]
+    }, 
+    "allowJs": true, 
+    "jsx": "react", 
+    "sourceMap": true, 
+    "downlevelIteration": true, 
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true, 
+    "experimentalDecorators": true, 
     "skipLibCheck": true,
-    "allowUnreachableCode": true,
+    "allowUnreachableCode": true
   },
   "include": [
     "./src"

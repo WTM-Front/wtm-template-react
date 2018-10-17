@@ -10,7 +10,7 @@ module.exports = webpack(env => {
         port: 8100,
         proxy: {
             '/api': {
-                target: wtmfront.api,
+                target: wtmfront.apiUrl,
                 pathRewrite: {
                     "^/api": ""
                 },
