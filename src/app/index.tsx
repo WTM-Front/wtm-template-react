@@ -16,7 +16,7 @@ import * as React from 'react';
 import Loadable from 'react-loadable';
 import { renderRoutes } from 'react-router-config';
 import { BrowserRouter } from 'react-router-dom';
-import store from 'store/index';
+import Store from 'store/index';
 import layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -35,7 +35,7 @@ export default class RootRoutes extends React.Component<any, any> {
              * 主页布局 
              */
             path: "/",
-            component: this.createCSSTransition(layout),
+            component: layout,
             //  业务路由
             routes: [
                 {
@@ -61,11 +61,8 @@ export default class RootRoutes extends React.Component<any, any> {
      */
     initRouters() {
         return lodash.map(containers, (component, key) => {
-            // x.component = this.createCSSTransition(containers[x.component] || this.NoMatch) as any;
-            // x.component = this.Loadable(containers[x.component])
             return {
                 "path": "/" + key,
-                // "exact": true,
                 "component": this.Loadable(component)
             };
         })
@@ -83,13 +80,10 @@ export default class RootRoutes extends React.Component<any, any> {
     // 组件加载动画
     Loading = (props) => {
         if (props.error) {
-            // When the loader has errored
             return <div>Error! {props.error}</div>;
         } else if (props.timedOut) {
-            // When the loader has taken longer than the timeout
             return <div>Taking a long time...</div>;
         } else if (props.pastDelay) {
-            // When the loader has taken longer than the delay
             return <>
                 <Skeleton active />
                 <Skeleton active />
@@ -98,8 +92,6 @@ export default class RootRoutes extends React.Component<any, any> {
                 <Skeleton active />
             </>
         } else {
-            // NProgress.start();
-            // When the loader has just started
             return <div></div>;
         }
     };
@@ -128,7 +120,10 @@ export default class RootRoutes extends React.Component<any, any> {
      */
     createCSSTransition(Component: any, content = true, classNames = "fade") {
         return class extends React.Component<any, any>{
-            state = { error: null, errorInfo: null };
+            state = {
+                error: null,
+                errorInfo: null
+            };
             content: HTMLDivElement;
             componentDidCatch(error, info) {
                 this.setState({
@@ -137,12 +132,11 @@ export default class RootRoutes extends React.Component<any, any> {
                 })
             }
             componentDidMount() {
-                if (Component != layout) {
-                    this.content.style.minHeight = (this.content.parentNode as HTMLDivElement).offsetHeight + "px";
-                }
+
             }
             render() {
-                // NProgress.done();
+                const { location } = this.props;
+                // 组件出错
                 if (this.state.errorInfo) {
                     return (
                         <Exception type="500" desc={<div>
@@ -155,33 +149,29 @@ export default class RootRoutes extends React.Component<any, any> {
                         </div>} />
                     );
                 }
-
-                return (
-                    <Animate transitionName={classNames}
-                        transitionAppear={true} component="" >
-                        <div className="app-animate-content" ref={e => this.content = e} >
-                            <Component  {...this.props} />
-                        </div>
-                    </Animate  >
-                );
+                // 认证通过
+                if (Store.Authorize.onPassageway(this.props)) {
+                    return (
+                        <Animate transitionName={classNames}
+                            transitionAppear={true} component="" key={Component.name} >
+                            <div className="app-animate-content" key="app-animate-content" >
+                                <Component  {...this.props} />
+                            </div>
+                        </Animate  >
+                    );
+                }
+                return <Exception type="404" desc={<h3>无权限访问
+                    <span>认证位置：store/system/authorize.ts</span>
+                    <code>{location.pathname}</code>
+                </h3>} />
             }
         }
     };
     /**
-     * 错误边界
-     */
-    state = { error: null, errorInfo: null };
-    componentDidCatch(error, info) {
-        this.setState({
-            error: error,
-            errorInfo: info
-        })
-    }
-    /**
      * 根据用户是否登陆渲染主页面或者 登陆界面
      */
     renderApp() {
-        if (store.User.isLogin) {
+        if (Store.User.isLogin) {
             console.log("-----------路由列表-----------", this.routes);
             return <LocaleProvider locale={zhCN}>
                 <>
@@ -193,26 +183,14 @@ export default class RootRoutes extends React.Component<any, any> {
         return <Login />
     }
     render() {
-        if (this.state.errorInfo) {
-            return (
-                <Exception type="500" desc={<div>
-                    <h2>组件出错~</h2>
-                    <details >
-                        {this.state.error && this.state.error.toString()}
-                        <br />
-                        {this.state.errorInfo.componentStack}
-                    </details>
-                </div>} />
-            );
-        }
         // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
             // <Provider
             //     {...store}
             // >
-                <BrowserRouter >
-                    {this.renderApp()}
-                </BrowserRouter>
+            <BrowserRouter >
+                {this.renderApp()}
+            </BrowserRouter>
             // </Provider>
         );
     }

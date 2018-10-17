@@ -21,27 +21,6 @@ interface subMenu {
     Children?: any[],
     // [key: string]: any
 }
-const Http = new Request('', (x) => {
-    if (x.status == 200) {
-        if (x.response && x.response.status) {
-            if (x.response.status == 200) {
-                return x.response.result;
-            }
-            notification['error']({
-                message: x.response.message,
-                description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-            });
-            throw x.response.message;
-        }
-        return x.response
-    }
-    console.log(x);
-    notification['error']({
-        message: x.message,
-        description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-    });
-    throw x;
-});
 export class Store {
     constructor() {
         subMenu.push({
@@ -52,27 +31,7 @@ export class Store {
             "Component": "",
             "Children": []
         })
-        // 填充 Key
-        const newGuid = (x: subMenu) => {
-            if (typeof x.Key == "undefined" || x.Key == "") {
-                x.Key = Help.GUID();
-            }
-            if (x.Children) {
-                x.Children = x.Children.map(newGuid)
-            } else {
-                x.Children = [];
-            }
-            return {
-                "Key": '',
-                "Name": "菜单名称",
-                "Icon": "menu-fold",
-                "Path": "/",
-                "Component": "",
-                "Children": [],
-                ...x,
-            };
-        }
-        this.setSubMenu(subMenu.map(newGuid))
+        this.setSubMenu(subMenu)
     }
     /** 菜单展开 收起 */
     @observable collapsed = true;
@@ -82,30 +41,6 @@ export class Store {
     @action.bound
     setSubMenu(subMenu) {
         this.subMenu = subMenu;
-    }
-    /**
-     * 提交修改菜单
-     */
-    @observable updateSubMenuLoading = false;
-    async  updateSubMenu() {
-        // return console.log(this.subMenu.filter(x => x.Key != "system"));
-        const newMenu = toJS(this.subMenu).filter(x => x.Key != "system");
-        if (lodash.isEqual(newMenu, subMenuJson.subMenu)) {
-            return message.warn("菜单没有任何改变")
-        }
-        runInAction(() => this.updateSubMenuLoading = true)
-        const data = await Http.post("/server/updateSubMenu", newMenu).toPromise();
-        if (data) {
-            notification['success']({
-                message: '菜单修改成功',
-                description: '',
-            });
-        } else {
-            notification['error']({
-                message: '菜单修改失败，请检查日志',
-                description: '',
-            });
-        }
     }
     /** 菜单收起 展开 */
     @action.bound

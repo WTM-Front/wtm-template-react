@@ -6,17 +6,18 @@
  * @desc [description]
 */
 import { configure } from "mobx";
-import user from './user';
+import user from './system/user';
+import Authorize from './system/authorize';
 configure({ enforceActions: "observed" });
 class store {
     constructor() {
         this.ready();
         this.init();
     }
+    /** 用户 */
     User = user;
-    /**
-     * 定义全局 变量 枚举 ===
-     */
+    /** 认证 */
+    Authorize = Authorize;
     ready() {
         console.log("-----------ready Store------------", this);
     }

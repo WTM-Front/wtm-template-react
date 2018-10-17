@@ -31,4 +31,5 @@ build
 wtmfront/swagger
 src/containers/test**
 package-lock.json
+**.back**
 

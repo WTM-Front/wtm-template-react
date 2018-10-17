@@ -92,7 +92,7 @@ export default class IApp extends React.Component<any, any> {
                         {x.Children && x.Children.map((y, yi) => <TreeNode {...TreeNodeConfig} title={y.Name} key={y.Key} icon={<Icon type={y.Icon} />} />)}
                     </TreeNode>)}
                 </Tree>
-                <Button loading={Store.updateSubMenuLoading} onClick={() => { Store.updateSubMenu() }}>{Store.updateSubMenuLoading ? '等待编译...' : '保存'} </Button>
+                {/* <Button loading={Store.updateSubMenuLoading} onClick={() => { Store.updateSubMenu() }}>{Store.updateSubMenuLoading ? '等待编译...' : '保存'} </Button> */}
                 <DrawerComponent />
             </div>
         );

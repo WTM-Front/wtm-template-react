@@ -16,7 +16,10 @@ class Store {
     @observable isLogin = true;
     // 用户信息
     @observable User = {
-
+        role: "ordinary",//administrator ordinary
+        subMenu: [
+            "/"
+        ]
     };
     @action.bound
     async Login(params) {
