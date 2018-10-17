@@ -3,7 +3,7 @@
  * @email lengyingxin8966@gmail.com
  * @create date 2018-09-12 18:52:27
  * @modify date 2018-09-12 18:52:27
- * @desc [description]
+ * @desc [description] .
  */
 import { message } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
