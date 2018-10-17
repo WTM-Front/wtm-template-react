@@ -1,7 +1,4 @@
-import { action, observable, runInAction, toJS } from "mobx";
-import { HttpBasics } from "core/HttpBasics";
-import { message } from "antd";
-import storeBasice from 'core/StoreBasice';
+import StoreBasice from 'store/table';
 import Swagger from '../pageConfig.json';
 export class Store extends storeBasice {
     constructor() {

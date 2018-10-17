@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { message, notification } from "antd";
-import { HttpBasics } from "core/HttpBasics";
+import { Request } from "utils/Request";
 import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from "mobx";
 import { Help } from 'utils/Help';
@@ -21,7 +21,7 @@ interface subMenu {
     Children?: any[],
     // [key: string]: any
 }
-const Http = new HttpBasics('', (x) => {
+const Http = new Request('', (x) => {
     if (x.status == 200) {
         if (x.response && x.response.status) {
             if (x.response.status == 200) {

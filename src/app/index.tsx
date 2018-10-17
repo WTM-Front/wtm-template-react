@@ -10,7 +10,7 @@ import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import containers from 'containers/index';
 import lodash from 'lodash';
-import { observer } from 'mobx-react';
+import { observer, Provider } from 'mobx-react';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import Loadable from 'react-loadable';
@@ -141,17 +141,6 @@ export default class RootRoutes extends React.Component<any, any> {
                     this.content.style.minHeight = (this.content.parentNode as HTMLDivElement).offsetHeight + "px";
                 }
             }
-            // shouldComponentUpdate(nextProps, nextState, nextContext) {
-            //     return Component != layout
-            // }
-            onEnd() {
-                // console.dir(Component == layout);
-                // console.log(this);
-                // if (Component != layout) {
-                //     this.content.style.minHeight = (this.content.parentNode as HTMLDivElement).offsetHeight + "px";
-                // }
-                //   this.content.style.minHeight=this.content.of
-            }
             render() {
                 // NProgress.done();
                 if (this.state.errorInfo) {
@@ -169,7 +158,7 @@ export default class RootRoutes extends React.Component<any, any> {
 
                 return (
                     <Animate transitionName={classNames}
-                        transitionAppear={true} component="" onEnd={this.onEnd.bind(this)}>
+                        transitionAppear={true} component="" >
                         <div className="app-animate-content" ref={e => this.content = e} >
                             <Component  {...this.props} />
                         </div>
@@ -216,13 +205,14 @@ export default class RootRoutes extends React.Component<any, any> {
                 </div>} />
             );
         }
+        // react-dom.development.js:492 Warning: Provider: It is not recommended to assign props directly to state because updates to props won't be reflected in state. In most cases, it is better to use props directly.
         return (
             // <Provider
             //     {...store}
             // >
-            <BrowserRouter >
-                {this.renderApp()}
-            </BrowserRouter>
+                <BrowserRouter >
+                    {this.renderApp()}
+                </BrowserRouter>
             // </Provider>
         );
     }

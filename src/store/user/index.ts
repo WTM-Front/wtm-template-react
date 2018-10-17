@@ -5,9 +5,9 @@
  * @modify date 2018-09-12 18:52:54
  * @desc [description]
 */
-import { HttpBasics } from 'core/HttpBasics';
+import { Request } from 'utils/Request';
 import { action, observable, runInAction } from "mobx";
-const Http = new HttpBasics('/user/');
+const Http = new Request('/user/');
 class Store {
     constructor() {
 

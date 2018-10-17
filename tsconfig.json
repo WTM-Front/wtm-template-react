@@ -18,9 +18,9 @@
       "assets": ["assets/*"],
       "components": ["components/*"],
       "containers": ["containers/*"],
-      "core":["core/*"],
       "store": ["store/*"],
-      "utils": ["utils/*"]
+      "utils": ["utils/*"],
+      "wtm": ["wtm/*"]
     }, 
     "allowJs": true, 
     "jsx": "react", 

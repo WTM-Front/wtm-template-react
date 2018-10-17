@@ -29,13 +29,22 @@
         background: #001529;
         color: #fff;
         padding: 0;
+        >.ant-row {
+            height: 100%;
+            >div {
+                height: 100%;
+            }
+        }
         .app-collapsed-trigger {
             cursor: pointer;
             font-size: 20px;
             height: 64px;
-            line-height: 64px;
-            padding: 0 24px;
-            &:hover{
+            line-height: 64px; // padding: 0 24px;
+            width: 64px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:hover {
                 background: #1790ff;
             }
         }

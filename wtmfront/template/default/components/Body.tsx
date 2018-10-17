@@ -7,7 +7,7 @@
 */
 import { Divider, Popconfirm } from 'antd';
 import TableBody from 'components/table/tableBody';
-import Store from 'core/StoreBasice';
+import Store from 'store/table';
 import moment from 'moment';
 import React from 'react';
 /**

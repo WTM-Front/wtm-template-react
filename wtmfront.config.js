@@ -6,9 +6,9 @@ module.exports = {
     registerHelper: "wtmfront/registerHelper",
     // 模板路径
     template: "wtmfront/template",
-    // 菜单文件
+    // 菜单写入 文件
     subMenu: "src/app/subMenu.json",
-    // 组件路径
+    // 生成组件存放路径
     containers: "src/containers",
     // api 地址
     apiUrl: "http://10.99.246.52:8010",
