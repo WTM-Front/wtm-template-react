@@ -15,33 +15,29 @@ import { observer } from 'mobx-react';
 import { mapValues } from './tableEdit';
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+interface ITableHeader {
+  /** 状态 */
+  Store: Store,
+  /** 属性item */
+  renderItem?: (params: renderItemParams) => React.ReactElement<any>;
+}
 /**
  * 搜索标题组件 
  * 
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */
-export default class TableHeaderComponent extends React.Component<{ Store: Store }, any> {
+export default class TableHeaderComponent extends React.Component<ITableHeader, any> {
   Store = this.props.Store;
   WrappedFormComponent = Form.create()(FormComponent);
   /**
    * 表单 item
    * @param param0 
    */
-  renderItem({ form, initialValue }: renderItemParams): JSX.Element | JSX.Element[] {
-    const { getFieldDecorator } = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
-    return <>
-
-    </>
+  renderItem(params: renderItemParams): JSX.Element | JSX.Element[] {
+    if (this.props.renderItem) {
+      return this.props.renderItem(params)
+    }
   }
   render() {
     return (
@@ -196,5 +192,21 @@ class ColumnsComponent extends React.Component<{ Store: Store }, any> {
         </Drawer>
       </>
     );
+  }
+}
+
+/**
+ * 编辑 装饰器
+ * @param Store 状态
+ */
+export function DecoratorsTableHeader(Store: Store) {
+  return function <T extends { new(...args: any[]): {} }>(Component: any) {
+    return class extends React.Component<any, any> {
+      render() {
+        return <TableHeaderComponent Store={Store} renderItem={(params) => {
+          return <Component {...params} Store={Store}/>
+        }} />
+      }
+    }
   }
 }

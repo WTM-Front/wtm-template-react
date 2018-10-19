@@ -15,23 +15,27 @@ import { Resizable } from 'react-resizable';
 import "./style.less";
 import ReactDOM from 'react-dom';
 import Rx, { Observable, Subscription } from 'rxjs';
+ interface ITableBody {
+  /** 状态 */
+  Store: Store,
+  /**
+  *  处理 表格类型输出
+  * @param column 
+  * @param index 
+  */
+  columnsMap?: (column: any, index: any, width: any) => any;
+  /** 操作选项 */
+  renderAction?: (text, record) => React.ReactElement<any>;
+}
 /**
  * 表格渲染组件 
  * 
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */
 @observer
-export default class TableBodyComponent extends React.Component<{ Store: Store }, any> {
+export default class TableBodyComponent extends React.Component<ITableBody, any> {
 
   Store = this.props.Store;
-  // columns = [
-  //   // ...this.Store.columns.map(this.columnsMap.bind(this)),
-  //   // {
-  //   //   title: 'Action',
-  //   //   dataIndex: 'Action',
-  //   //   render: this.renderAction.bind(this),
-  //   // }
-  // ];
   /**
    * 初始化列参数配置
    */
@@ -49,6 +53,9 @@ export default class TableBodyComponent extends React.Component<{ Store: Store }
   * @param index 
   */
   columnsMap(column, index, width) {
+    if (this.props.columnsMap) {
+      return this.props.columnsMap(column, index, width);
+    }
     switch (column.format) {
       // 转换时间类型 输出
       case 'date-time':
@@ -81,6 +88,9 @@ export default class TableBodyComponent extends React.Component<{ Store: Store }
    * @param record 
    */
   renderAction(text, record) {
+    if (this.props.renderAction) {
+      return this.props.renderAction(text, record);
+    }
     return <ActionComponent {...this.props} data={record} />;
   }
   /**
@@ -212,5 +222,21 @@ class ActionComponent extends React.Component<{ Store: Store, data: any }, any> 
 
       </>
     );
+  }
+}
+/**
+ * table 装饰器
+ * @param params 
+ */
+export function DecoratorsTableBody(params: ITableBody) {
+  return function <T extends { new(...args: any[]): {} }>(Component: any) {
+    return class extends React.Component<any, any> {
+      render() {
+        return <>
+          <TableBodyComponent {...params} />
+          <Component {...params} />
+        </>
+      }
+    }
   }
 }

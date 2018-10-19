@@ -6,6 +6,7 @@
  * @desc [description]
 */
 import TableBody from 'wtm/components/table/tableBody';
+
 /**
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */

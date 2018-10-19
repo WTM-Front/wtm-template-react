@@ -17,20 +17,28 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 const Dragger = Upload.Dragger;
+ interface ITableEdit {
+  /** 状态 */
+  Store: Store,
+  /** 属性item */
+  renderItem?: (params: renderItemParams) => React.ReactElement<any>;
+}
 /**
  * 编辑渲染组件 
  * 
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */
 @observer
-export default class TableEditComponent extends React.Component<{ Store: Store }, any> {
+export default class TableEditComponent extends React.Component<ITableEdit, any> {
   Store = this.props.Store;
   /**
    * 表单 item
    * @param param0 
    */
-  renderItem({ form, initialValue }: renderItemParams) {
-
+  renderItem(params: renderItemParams) {
+    if (this.props.renderItem) {
+      return this.props.renderItem(params);
+    }
   }
   /**
    * 渲染按钮组
@@ -103,6 +111,9 @@ class EditComponent extends React.Component<{ Store: Store, renderItem: (params:
     );
   }
 }
+/**
+ * 隐藏显示 编辑属性
+ */
 @observer
 class HideInstall extends React.Component<{ Store: Store }, any> {
   Store = this.props.Store;
@@ -332,4 +343,20 @@ export function mapValues(values, dateFormat) {
       return data.valueOf()
     }
   );
+}
+
+/**
+ * 编辑 装饰器
+ * @param Store 状态
+ */
+export function DecoratorsTableEdit(Store: Store) {
+  return function <T extends { new(...args: any[]): {} }>(Component: any) {
+    return class extends React.Component<any, any> {
+      render() {
+        return <TableEditComponent Store={Store} renderItem={(params) => {
+          return <Component {...params} Store={Store}/>
+        }} />
+      }
+    }
+  }
 }

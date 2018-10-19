@@ -1,29 +1,28 @@
-import { Divider, Popconfirm } from 'antd';
-import TableBody from 'components/table/tableBody';
-import Store from 'store/table';
-import moment from 'moment';
+import { Alert, Divider, Popconfirm } from 'antd';
 import React from 'react';
+import { DecoratorsTableBody } from 'wtm/components/table/tableBody';
+import Store from '../store';
+
 /**
  * 组件继承 支持重写,
  */
-export default class BodyComponent extends TableBody {
-    // 重写示例
-    // renderAction(text, record) {
-    //     console.log(record);
-    //     return <ActionComponent {...this.props} data={record} />;
-    // }
-    // 重写示例
-    // columnsMap(column) {
-    //     column.render = (record) => {
-    //        return "哈哈哈"
-    //     }
-    //     return column
-    // }
+@DecoratorsTableBody({
+    Store: Store
+})
+export default class BodyComponent extends React.Component<any, any> {
+    render() {
+        return  <Alert
+        showIcon
+        message="装饰器测试"
+        type="warning"
+        closable
+      />
+    }
 }
 /**
  * 重写 按钮渲染示例
  */
-class ActionComponent extends React.Component<{ Store: Store, data: any }, any> {
+class ActionComponent extends React.Component<{ Store: any, data: any }, any> {
     Store = this.props.Store;
     async onDelete() {
         let data = await this.Store.onDelete([this.props.data])

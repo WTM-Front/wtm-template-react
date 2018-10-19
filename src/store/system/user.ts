@@ -16,7 +16,7 @@ class Store {
     @observable isLogin = true;
     // 用户信息
     @observable User = {
-        role: "ordinary",//administrator ordinary
+        role: "administrator",//administrator ordinary
         subMenu: [
             "/"
         ]

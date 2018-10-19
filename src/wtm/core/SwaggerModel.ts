@@ -23,7 +23,6 @@ interface Icolumns extends ColumnProps<any> {
  */
 export default class SwaggerModel {
     constructor() {
-        console.log(this);
     }
     /**
      * swagger 解析信息 

@@ -1,7 +1,8 @@
-import { Form, Button, Popconfirm, Divider } from 'antd';
+import { Form } from 'antd';
 import DataEntry from 'components/table/dataEntry';
-import TableEdit from 'components/table/tableEdit';
 import * as React from 'react';
+import { DecoratorsTableEdit } from 'wtm/components/table/tableEdit';
+import Store from '../store';
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -16,15 +17,13 @@ const formItemLayout = {
 /**
  * 组件继承 支持重写,
  */
-export default class EditComponent extends TableEdit {
-    renderItem({ form, initialValue }) {
+@DecoratorsTableEdit(Store)
+export default class EditComponent extends React.Component<any, any>{
+    render() {
+        const { form, initialValue } = this.props;
         const { getFieldDecorator } = form;
         return <>
             {{{EditFormItem install}}}
         </>
     }
-      // 重写示例
-    // renderButtons() {
-    //     return <Button icon="folder-add" onClick={this.Store.onModalShow.bind(this.Store, {})}>添加</Button>
-    // }
 }
