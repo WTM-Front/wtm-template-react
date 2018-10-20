@@ -27,6 +27,21 @@
                     "Children": []
                 }
             ]
+        },
+        {
+            "Key": "13b6394f-8dab-4981-aa9e-7806c2154106",
+            "Name": "test",
+            "Icon": "menu-fold",
+            "Path": "/test",
+            "Component": "test",
+            "Action": [
+                "install",
+                "update",
+                "delete",
+                "import",
+                "export"
+            ],
+            "Children": []
         }
     ]
 }
