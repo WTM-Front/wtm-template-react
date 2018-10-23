@@ -6,8 +6,9 @@
  * @desc [description]
 */
 import { configure } from "mobx";
-import user from './system/user';
+import User from './system/user';
 import Authorize from './system/authorize';
+import Meun from './system/menu';
 configure({ enforceActions: "observed" });
 class store {
     constructor() {
@@ -15,11 +16,13 @@ class store {
         this.init();
     }
     /** 用户 */
-    User = user;
+    User = User;
     /** 认证 */
     Authorize = Authorize;
+    /** 菜单 */
+    Meun = Meun;
     ready() {
-        console.log("-----------ready Store------------", this);
+        console.log("-----------全局状态------------", this);
     }
     init() {
 

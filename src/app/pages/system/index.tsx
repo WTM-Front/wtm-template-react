@@ -8,6 +8,8 @@
 import { Tabs } from 'antd';
 import * as React from 'react';
 import SubMenu from './subMenu';
+import Authorize from './authorize';
+
 const TabPane = Tabs.TabPane;
 export default class IApp extends React.Component<any, any> {
     public render() {
@@ -17,12 +19,15 @@ export default class IApp extends React.Component<any, any> {
         }
         return (
             <Tabs
-                defaultActiveKey="SubMenu"
+                defaultActiveKey="subMenu"
                 tabPosition="left"
             >
-                <TabPane tab="基础设置" key="2">Content of tab 2</TabPane>
-                <TabPane tab="菜单设置" key="SubMenu">
+                {/* <TabPane tab="基础设置" key="2">Content of tab 2</TabPane> */}
+                <TabPane tab="菜单设置" key="subMenu">
                     <SubMenu />
+                </TabPane>
+                <TabPane tab="权限设置" key="authorize">
+                    <Authorize />
                 </TabPane>
             </Tabs>
         );

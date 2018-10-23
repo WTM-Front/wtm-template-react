@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 // import routersConfig from '../routersConfig';
-import Store from '../store';
+import Store from 'store/index';
 import lodash from 'lodash';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -24,7 +24,7 @@ export default class App extends React.Component<any, any> {
     })
   }
   runderSubMenu() {
-    return Store.subMenu.map((menu, index) => {
+    return Store.Meun.subMenu.map((menu, index) => {
       if (menu.Children && menu.Children.length > 0) {
         return <SubMenu key={menu.Key} title={<span><Icon type={menu.Icon} /><span>{menu.Name}</span></span>}>
           {
@@ -39,7 +39,7 @@ export default class App extends React.Component<any, any> {
   }
   render() {
     let selectedKeys = "/", openKeys = "";
-    Store.subMenu.filter(x => {
+    Store.Meun.subMenu.filter(x => {
       if (this.props.location.pathname == "/" && selectedKeys == "/") {
         return
       }
@@ -65,7 +65,7 @@ export default class App extends React.Component<any, any> {
     //   delete config.openKeys;
     // }
     // console.log(selectedKeys, openKeys);
-    const width = Store.collapsed ? 80 : 250
+    const width = Store.Meun.collapsed ? 80 : 250
     return (
       <div className="app-layout-sider" style={{ width }} >
         <div className="app-layout-logo" >Logo</div>
@@ -75,7 +75,7 @@ export default class App extends React.Component<any, any> {
           defaultSelectedKeys={[selectedKeys]}
           {...config}
           style={{ borderRight: 0, width }}
-          inlineCollapsed={Store.collapsed}
+          inlineCollapsed={Store.Meun.collapsed}
         >
           <Menu.Item key="/">
             <Link to="/">

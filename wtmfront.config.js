@@ -7,7 +7,7 @@ module.exports = {
     // 模板路径
     template: "wtmfront/template",
     // 菜单写入 文件
-    subMenu: "src/app/subMenu.json",
+    subMenu: "src/subMenu.json",
     // 生成组件存放路径
     containers: "src/containers",
     // api 地址
@@ -23,7 +23,8 @@ module.exports = {
         },
         // 详情
         "details": {
-            "name": "get/{id}",
+            // "name": "get/{id}",
+            "name": "get/{**}",
             "type": "Get"
         },
         // 插入

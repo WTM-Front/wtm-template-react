@@ -10,7 +10,7 @@ import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import containers from 'containers/index';
 import lodash from 'lodash';
-import { observer, Provider } from 'mobx-react';
+import { observer } from 'mobx-react';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import Loadable from 'react-loadable';
@@ -20,7 +20,6 @@ import Store from 'store/index';
 import layout from "./layout/index";
 import Home from "./pages/home";
 import Login from "./pages/login";
-// import swagger, { Entrance } from "./pages/swagger/index";
 import System from "./pages/system";
 import './style.less';
 
@@ -159,7 +158,7 @@ export default class RootRoutes extends React.Component<any, any> {
                 return <Animate transitionName={classNames}
                     transitionAppear={true} component="" key={Component.name} >
                     <Exception type="404" desc={<h3>无权限访问 {this.props.location.pathname}
-                    <span>认证位置：store/system/authorize.ts</span>
+                        <span>认证位置：store/system/authorize.ts</span>
                         <code>{location.pathname}</code>
                     </h3>} />
                 </Animate  >
@@ -171,7 +170,7 @@ export default class RootRoutes extends React.Component<any, any> {
      */
     renderApp() {
         if (Store.User.isLogin) {
-            console.log("-----------路由列表-----------", this.routes);
+            console.log("-----------路由列表-----------", lodash.find(this.routes, x => x.path == "/").routes);
             return <LocaleProvider locale={zhCN}>
                 <>
                     {renderRoutes(this.routes)}

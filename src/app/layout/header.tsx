@@ -3,8 +3,7 @@ import { Layout, Menu, Avatar, Row, Col, Dropdown, Button, Icon } from 'antd';
 import NoticeIcon from 'ant-design-pro/lib/NoticeIcon';
 import { Link } from 'react-router-dom';
 import * as React from 'react';
-import store from 'store/index';
-import appStore from '../store';
+import Store from 'store/index';
 const { Header } = Layout;
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
@@ -27,7 +26,7 @@ export default class App extends React.Component<any, any> {
                     <Menu.Item key="3">nav 3</Menu.Item>
                 </Menu> */}
                 <Row>
-                    <Col span={4}><Icon onClick={() => { appStore.toggleCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
+                    <Col span={4}><Icon onClick={() => { Store.Meun.toggleCollapsed() }} className="app-collapsed-trigger" type="menu-fold" theme="outlined" /></Col>
                     <Col span={20} style={{ textAlign: "right", padding: "0 20px" }}>
                         <NoticeIconComponent />
                         <UserMenu {...this.props} />
@@ -49,10 +48,10 @@ class UserMenu extends React.Component<any, any> {
                         } }>  <Icon type={'appstore'} />个人中心</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a onClick={() => { store.User.outLogin() }}>  <Icon type={'appstore'} />设置</a>
+                        <a onClick={() => {  Store.User.outLogin() }}>  <Icon type={'appstore'} />设置</a>
                     </Menu.Item>
                     <Menu.Item>
-                        <a onClick={() => { store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
+                        <a onClick={() => {  Store.User.outLogin() }}>  <Icon type={'appstore'} />退出</a>
                     </Menu.Item>
                     {/* <Menu.Item>
                     <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>

@@ -9,7 +9,7 @@ import { Alert, Button, Drawer, Icon, message, Tabs, Tree } from 'antd';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Store from '../../store';
+import Store from 'store/index';
 const TabPane = Tabs.TabPane;
 const TreeNode = Tree.TreeNode;
 @observer
@@ -42,7 +42,7 @@ export default class IApp extends React.Component<any, any> {
                 }
             });
         };
-        const data = [...toJS(Store.subMenu)];
+        const data = [...toJS(Store.Meun.subMenu)];
         let dragObj;
         loop(data, dragKey, (item, index, arr) => {
             arr.splice(index, 1);
@@ -68,7 +68,7 @@ export default class IApp extends React.Component<any, any> {
                 item.Children.push(dragObj);
             });
         }
-        Store.setSubMenu(data);
+        Store.Meun.setSubMenu(data);
     }
 
     render() {
@@ -88,7 +88,7 @@ export default class IApp extends React.Component<any, any> {
                     onDragEnter={this.onDragEnter}
                     onDrop={this.onDrop}
                 >
-                    {Store.subMenu.map((x, i) => <TreeNode {...TreeNodeConfig} title={x.Name} key={x.Key} icon={<Icon type={x.Icon} />} >
+                    {Store.Meun.subMenu.map((x, i) => <TreeNode {...TreeNodeConfig} title={x.Name} key={x.Key} icon={<Icon type={x.Icon} />} >
                         {x.Children && x.Children.map((y, yi) => <TreeNode {...TreeNodeConfig} title={y.Name} key={y.Key} icon={<Icon type={y.Icon} />} />)}
                     </TreeNode>)}
                 </Tree>

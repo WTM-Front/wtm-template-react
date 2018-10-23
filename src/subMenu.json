@@ -29,11 +29,26 @@
             ]
         },
         {
-            "Key": "13b6394f-8dab-4981-aa9e-7806c2154106",
+            "Key": "f739e560-e071-4a7d-a74a-d000315e51b0",
             "Name": "test",
             "Icon": "menu-fold",
             "Path": "/test",
             "Component": "test",
+            "Action": [
+                "install",
+                "update",
+                "delete",
+                "import",
+                "export"
+            ],
+            "Children": []
+        },
+        {
+            "Key": "0e20e2ab-1cb8-442e-afba-911bdf0a1cbc",
+            "Name": "测试爱的色放",
+            "Icon": "menu-fold",
+            "Path": "/testaa",
+            "Component": "testaa",
             "Action": [
                 "install",
                 "update",
