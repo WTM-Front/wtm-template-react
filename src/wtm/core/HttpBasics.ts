@@ -79,7 +79,6 @@ export class HttpBasics {
     get(url: string, body?: { [key: string]: any } | string, headers?: Object) {
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body);
-        url = this.compatibleUrl(this.address, url, body as any);
         if (/\/{\S*}/.test(url)) {
             if (typeof body == "object") {
                 const urlStr = lodash.compact(url.match(/\/{\w[^\/{]*}/g).map(x => {
@@ -89,6 +88,7 @@ export class HttpBasics {
                 body = {};
             }
         }
+        url = this.compatibleUrl(this.address, url, body as any);
         return Rx.Observable.ajax.get(
             url,
             headers
