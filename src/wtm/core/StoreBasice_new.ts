@@ -191,8 +191,8 @@ export default class Store {
    */
   async onDetails(params) {
     this.onPageState("loadingEdit", true)
-    const method = this.Urls.search.method;
-    const src = this.Urls.search.src;
+    const method = this.Urls.details.method;
+    const src = this.Urls.details.src;
     const res = await this.Request[method](src, params).toPromise()
     this.onPageState("loadingEdit", false)
     return res || {}
@@ -218,8 +218,8 @@ export default class Store {
    * @param params 数据实体
    */
   async onInsert(params) {
-    const method = this.Urls.search.method;
-    const src = this.Urls.search.src;
+    const method = this.Urls.insert.method;
+    const src = this.Urls.insert.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
       message.success('添加成功')
@@ -237,8 +237,8 @@ export default class Store {
    * @param params 数据实体
    */
   async onUpdate(params) {
-    const method = this.Urls.search.method;
-    const src = this.Urls.search.src;
+    const method = this.Urls.update.method;
+    const src = this.Urls.update.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
       message.success('更新成功')
@@ -257,8 +257,8 @@ export default class Store {
    */
   async onDelete(params: any[]) {
     params = params.map(x => x[this.IdKey])
-    const method = this.Urls.search.method;
-    const src = this.Urls.search.src;
+    const method = this.Urls.delete.method;
+    const src = this.Urls.delete.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
       message.success('删除成功')
