@@ -17,45 +17,45 @@ module.exports = {
     // 规范 接口
     include: {
         // 列表搜索
-        "search": {
-            "name": "search",
-            "type": "Post"
+        search: {
+            name: "search",
+            method: "post"
         },
         // 详情
-        "details": {
-            // "name": "get/{id}",
-            "name": "get/{**}",
-            "type": "Get"
+        details: {
+            name: "get/{id}",
+            // name: "get/{**}",
+            method: "get"
         },
         // 插入
-        "install": {
-            "name": "add",
-            "type": "Post"
+        insert: {
+            name: "add",
+            method: "post"
         },
         // 修改
-        "update": {
-            "name": "edit",
-            "type": "Post"
+        update: {
+            name: "edit",
+            method: "post"
         },
         // 删除
-        "delete": {
-            "name": "delete",
-            "type": "Post"
+        delete: {
+            name: "delete",
+            method: "post"
         },
         // 导入
-        "import": {
-            "name": "import",
-            "type": "Post"
+        import: {
+            name: "import",
+            method: "post"
         },
         // 导出
-        "export": {
-            "name": "export",
-            "type": "Post"
+        export: {
+            name: "export",
+            method: "post"
         },
         // execl 模板
-        "template": {
-            "name": "template",
-            "type": "Post"
+        template: {
+            name: "template",
+            method: "post"
         }
     },
     // 公共接口地址

@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { Divider, Popconfirm, Row, Table } from 'antd';
-import Store from '../../core/StoreBasice';
+import Store from '../../core/StoreBasice_new';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import * as React from 'react';
@@ -15,7 +15,7 @@ import { Resizable } from 'react-resizable';
 import "./style.less";
 import ReactDOM from 'react-dom';
 import Rx, { Observable, Subscription } from 'rxjs';
- interface ITableBody {
+interface ITableBody {
   /** 状态 */
   Store: Store,
   /**
@@ -41,8 +41,8 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    */
   initColumns() {
     if (this.rowDom && this.rowDom.clientWidth) {
-      const width = Math.floor(this.rowDom.clientWidth / (this.Store.columns.length + 1))
-      this.Store.onColumnsUpdate(this.Store.columns.map((col, index) => {
+      const width = Math.floor(this.rowDom.clientWidth / (this.Store.SwaggerModel.columns.length + 1))
+      this.Store.SwaggerModel.onColumnsUpdate(this.Store.SwaggerModel.columns.map((col, index) => {
         return this.columnsMap(col, index, width)
       }))
     }
@@ -64,7 +64,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
             if (record == null || record == undefined) {
               return "";
             }
-            return moment(record).format(this.Store.dateTimeFormat)
+            return moment(record).format(this.Store.Format.dateTime)
           } catch (error) {
             return error.toString()
           }
@@ -100,7 +100,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    * @param sorter 
    */
   onChange(page, filters, sorter) {
-    this.Store.onGet({
+    this.Store.onSearch({}, {
       pageNo: page.current,
       pageSize: page.pageSize
     })
@@ -131,13 +131,13 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    */
   private handleResize = index => (e, { size }) => {
     let column = {
-      ...this.Store.columns[index],
+      ...this.Store.SwaggerModel.columns[index],
       width: size.width,
     }
-    this.Store.onColumnsUpdate([
-      ...this.Store.columns.slice(0, index),
+    this.Store.SwaggerModel.onColumnsUpdate([
+      ...this.Store.SwaggerModel.columns.slice(0, index),
       column,
-      ...this.Store.columns.slice(index + 1, this.Store.columns.length),
+      ...this.Store.SwaggerModel.columns.slice(index + 1, this.Store.SwaggerModel.columns.length),
     ])
     // console.log(this.columns);
     // this.forceUpdate();
@@ -145,7 +145,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
   resize: Subscription;
   private rowDom: HTMLDivElement;
   componentDidMount() {
-    this.Store.onGet();
+    this.Store.onSearch();
     this.initColumns();
     // 窗口变化重新计算列宽度
     this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(800).subscribe(e => {
@@ -165,7 +165,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
       selectedRowKeys: this.Store.selectedRowKeys,
       onChange: e => this.Store.onSelectChange(e),
     };
-    const columns = this.Store.columns.slice();
+    const columns = this.Store.SwaggerModel.columns.slice();
     columns.push({
       title: 'Action',
       dataIndex: 'Action',
@@ -206,7 +206,7 @@ class ActionComponent extends React.Component<{ Store: Store, data: any }, any> 
   async onDelete() {
     let data = await this.Store.onDelete([this.props.data])
     if (data) {
-      this.Store.onGet();
+      this.Store.onSearch();
     }
   }
   render() {

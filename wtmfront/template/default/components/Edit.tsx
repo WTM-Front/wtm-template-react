@@ -20,7 +20,7 @@ export default class EditComponent extends TableEdit {
     renderItem({ form, initialValue }) {
         const { getFieldDecorator } = form;
         return <>
-            {{{EditFormItem install}}}
+            {{{EditFormItem insert}}}
         </>
     }
       // 重写示例

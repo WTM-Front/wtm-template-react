@@ -19,6 +19,6 @@ import { notification } from 'antd';
 notification.config({
   duration: 3,
   top: 60
-});
+}); 
 ReactDOM.render(<App />,
   document.getElementById('root'));

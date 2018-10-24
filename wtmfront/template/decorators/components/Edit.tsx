@@ -23,7 +23,7 @@ export default class EditComponent extends React.Component<any, any>{
         const { form, initialValue } = this.props;
         const { getFieldDecorator } = form;
         return <>
-            {{{EditFormItem install}}}
+            {{{EditFormItem insert}}}
         </>
     }
 }

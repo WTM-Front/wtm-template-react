@@ -22,12 +22,12 @@ interface Icolumns extends ColumnProps<any> {
  * swagger 模型信息
  */
 export default class SwaggerModel {
-    constructor() {
+    constructor(private Swagger: WTM.ISwaggerModel) {
     }
     /**
      * swagger 解析信息 
      */
-    Swagger: ISwaggerModel;
+    // Swagger: WTM.ISwaggerModel;
     /**
      * 所有列属性
      */
@@ -102,37 +102,37 @@ export default class SwaggerModel {
     /**
      * 添加属性
      */
-    private _install: Ifield[];
-    public get install(): Ifield[] {
-        if (!this._install) {
-            this._install = this.Swagger.install.filter(x => x.attribute.available)
+    private _insert: Ifield[];
+    public get insert(): Ifield[] {
+        if (!this._insert) {
+            this._insert = this.Swagger.insert.filter(x => x.attribute.available)
         }
-        return this._install;
+        return this._insert;
     }
     /**
      * 隐藏的添加属性
      */
-    private _hideInstall: Ifield[];
-    public get hideInstall(): Ifield[] {
-        if (!this._hideInstall) {
-            this._hideInstall = this.Swagger.install.filter(x => !x.attribute.available)
+    private _hideInsert: Ifield[];
+    public get hideInsert(): Ifield[] {
+        if (!this._hideInsert) {
+            this._hideInsert = this.Swagger.insert.filter(x => !x.attribute.available)
         }
-        return this._hideInstall;
+        return this._hideInsert;
     }
     /**
      * 需要追加的添加属性。
      */
     @observable
-    private _appendInstall: Ifield[];
+    private _appendInsert: Ifield[];
     @computed
-    public get appendInstall(): Ifield[] {
-        if (!this._appendInstall) {
-            this._appendInstall = [];
+    public get appendInsert(): Ifield[] {
+        if (!this._appendInsert) {
+            this._appendInsert = [];
         }
-        return this._appendInstall;
+        return this._appendInsert;
     }
-    public set appendInstall(value: Ifield[]) {
-        this._appendInstall = lodash.filter(this.Swagger.install, x => lodash.includes(value, x.key));
+    public set appendInsert(value: Ifield[]) {
+        this._appendInsert = lodash.filter(this.Swagger.insert, x => lodash.includes(value, x.key));
     }
 
 }

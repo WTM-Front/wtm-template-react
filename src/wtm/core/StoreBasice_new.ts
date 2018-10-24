@@ -8,49 +8,101 @@
 import { message } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import NProgress from 'nprogress';
-import wtmfront from '@WTMConfig';
+// import wtmfront from '@WTMConfig';
 import Common from './Common';
 import { HttpBasics } from './HttpBasics';
 import SwaggerModel from "./SwaggerModel";
-const { include } = wtmfront;
-export default class Store extends SwaggerModel {
+// const { include } = wtmfront;
+export default class Store {
   constructor(public StoreConfig) {
-    super(StoreConfig.Swagger);
+
   }
+  /** 数据 ID 索引 */
+  protected IdKey = 'id'
+  /** 页面操按钮 */
+  Actions: WTM.IActions = {
+    insert: {
+      state: true,
+      name: "添加"
+    },
+    update: {
+      state: true,
+      name: "修改"
+    },
+    delete: {
+      state: true,
+      name: "删除"
+    },
+    import: {
+      state: true,
+      name: "导入"
+    },
+    export: {
+      state: true,
+      name: "导出"
+    },
+  }
+  /** url 地址 */
+  Urls: WTM.IUrls = {
+    search: {
+      src: "/test/search",
+      method: "post"
+    },
+    details: {
+      src: "/test/details/{id}",
+      method: "get"
+    },
+    insert: {
+      src: "/test/insert",
+      method: "post"
+    },
+    update: {
+      src: "/test/update",
+      method: "post"
+    },
+    delete: {
+      src: "/test/delete",
+      method: "post"
+    },
+    import: {
+      src: "/test/import",
+      method: "post"
+    },
+    export: {
+      src: "/test/export",
+      method: "post"
+    },
+    template: {
+      src: "/test/template",
+      method: "post"
+    }
+  };
   /** 公共数据类 */
   Common = Common
-  /** Ajax   */
-  Http = new HttpBasics(APIADDRESS + this.StoreConfig.address)
-  /** 数据 ID 索引 */
-  IdKey = 'id'
-  /** 日期格式 */
-  dateFormat = 'YYYY-MM-DD'
-  /** 日期时间格式 */
-  dateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
-  /** 按钮功能 */
-  // Actions: WTM.IActions = {
-  //   insert: true,
-  //   update: true,
-  //   delete: true,
-  //   import: true,
-  //   export: true
-  // }
-  /** 搜索数据 */
-  searchParams: any = {
-    // pageNo: 1,
-    // pageSize: 1
+  /** 格式化数据参数 */
+  Format = {
+    date: "YYYY-MM-DD",
+    dateTime: "YYYY-MM-DD HH:mm:ss",
   }
-  /** table 数据源 */
+  /** swagger数据模型 */
+  SwaggerModel = new SwaggerModel(this.StoreConfig.Swagger);
+  /** Ajax   */
+  Request = new HttpBasics(APIADDRESS);
+  /** 搜索数据参数 */
+  searchParams: any = {
+
+  }
+  /** 数据列表 */
   @observable dataSource = {
     count: 0,
     list: [],
     pageNo: 1,
     pageSize: 10
   }
-  /** table 已选择 keys */
-  @observable selectedRowKeys = []
+  /** 多选行 key */
+  @observable selectedRowKeys = [];
   /**  详情 */
-  @observable details: any = {}
+  @observable details: any = {};
   /** 页面动作 */
   @observable pageState = {
     visibleEdit: false,//编辑显示
@@ -65,9 +117,7 @@ export default class Store extends SwaggerModel {
    * @param value 
    */
   @action.bound
-  onPageState(
-    key: "visibleEdit" | "visiblePort" | "loading" | "loadingEdit" | "isUpdate",
-    value?: boolean) {
+  onPageState(key: "visibleEdit" | "visiblePort" | "loading" | "loadingEdit" | "isUpdate", value?: boolean) {
     const prevVal = this.pageState[key];
     if (prevVal == value) {
       return
@@ -78,13 +128,12 @@ export default class Store extends SwaggerModel {
     this.pageState[key] = value;
   }
   /**
-   * table 选择 行 
+   * 多选 行 
    * @param selectedRowKeys 选中的keys
    */
   @action.bound
   onSelectChange(selectedRowKeys) {
     this.selectedRowKeys = selectedRowKeys
-    console.log(this.selectedRowKeys);
   }
   /**
    * 编辑
@@ -97,7 +146,7 @@ export default class Store extends SwaggerModel {
       this.onPageState("isUpdate", false)
     } else {
       this.onPageState("isUpdate", true)
-      details = await this.onGetDetails(details)
+      details = await this.onDetails(details)
     }
     runInAction(() => {
       this.details = details
@@ -109,50 +158,44 @@ export default class Store extends SwaggerModel {
    * 加载数据 列表
    * @param params 搜索参数
    */
-  async onGet(params?) {
+  async onSearch(params: any = {}, page: any = { pageNo: 1, pageSize: 10 }) {
     if (this.pageState.loading == true) {
       return message.warn('数据正在加载中')
     }
-    this.onPageState("loading", true)
-    this.searchParams = { ...this.searchParams, ...params }
-    // 页码 参数特殊处理,不需要从 search 字段中传递
-    let pageNo = this.dataSource.pageNo,
-      pageSize = this.dataSource.pageSize
-    if (this.searchParams.pageNo) {
-      pageNo = this.searchParams.pageNo
-      delete this.searchParams.pageNo
-    }
-    if (this.searchParams.pageSize) {
-      pageSize = this.searchParams.pageSize
-      delete this.searchParams.pageSize
-    }
-    const result = await this.Http.create(include.search, {
-      pageNo: pageNo,
-      pageSize: pageSize,
+    this.onPageState("loading", true);
+    this.searchParams = { ...this.searchParams, ...params };
+    params = {
+      ...page,
       search: this.searchParams
-    }).map(result => {
-      if (result.list) {
-        result.list = result.list.map((x, i) => {
+    }
+    const method = this.Urls.search.method;
+    const src = this.Urls.search.src;
+    const res = await this.Request[method](src, params).map(data => {
+      if (data.list) {
+        data.list = data.list.map((x, i) => {
+          // antd table 列表属性需要一个唯一key
           return { key: i, ...x }
         })
       }
-      return result
+      return data
     }).toPromise()
     runInAction(() => {
-      this.dataSource = result || this.dataSource
+      this.dataSource = res || this.dataSource
       this.onPageState("loading", false)
     })
-    return result
+    return res
   }
   /**
    * 详情
    * @param params 数据实体
    */
-  async onGetDetails(params) {
+  async onDetails(params) {
     this.onPageState("loadingEdit", true)
-    const result = await this.Http.create(include.details, params).toPromise()
+    const method = this.Urls.search.method;
+    const src = this.Urls.search.src;
+    const res = await this.Request[method](src, params).toPromise()
     this.onPageState("loadingEdit", false)
-    return result || {}
+    return res || {}
   }
   /**
    * 编辑数据
@@ -168,41 +211,45 @@ export default class Store extends SwaggerModel {
     if (this.pageState.isUpdate) {
       return await this.onUpdate(details)
     }
-    return await this.onInstall(details)
+    return await this.onInsert(details)
   }
   /**
    * 添加数据
    * @param params 数据实体
    */
-  async onInstall(params) {
-    const result = await this.Http.create(include.install, params).toPromise()
-    if (result) {
+  async onInsert(params) {
+    const method = this.Urls.search.method;
+    const src = this.Urls.search.src;
+    const res = await this.Request[method](src, params).toPromise()
+    if (res) {
       message.success('添加成功')
       // 刷新数据
-      this.onGet()
+      this.onSearch()
       this.onPageState("visibleEdit", false)
     } else {
       message.error('添加失败')
     }
     this.onPageState("loadingEdit", false)
-    return result
+    return res
   }
   /**
    * 更新数据
    * @param params 数据实体
    */
   async onUpdate(params) {
-    const result = await this.Http.create(include.update, params).toPromise()
-    if (result) {
+    const method = this.Urls.search.method;
+    const src = this.Urls.search.src;
+    const res = await this.Request[method](src, params).toPromise()
+    if (res) {
       message.success('更新成功')
       // 刷新数据
-      this.onGet()
+      this.onSearch()
       this.onPageState("visibleEdit", false)
     } else {
       message.error('更新失败')
     }
     this.onPageState("loadingEdit", false)
-    return result
+    return res
   }
   /**
    * 删除数据
@@ -210,23 +257,26 @@ export default class Store extends SwaggerModel {
    */
   async onDelete(params: any[]) {
     params = params.map(x => x[this.IdKey])
-    const result = await this.Http.create(include.delete, params).toPromise()
-    if (result) {
+    const method = this.Urls.search.method;
+    const src = this.Urls.search.src;
+    const res = await this.Request[method](src, params).toPromise()
+    if (res) {
       message.success('删除成功')
       this.onSelectChange([]);
       // 刷新数据
-      this.onGet();
+      this.onSearch();
     } else {
       message.success('删除失败')
     }
-    return result
+    return res
   }
   /**
    * 导入 配置 参数
    * https://ant.design/components/upload-cn/#components-upload-demo-picture-style
    */
-  @computed get importConfig() {
-    const action = this.Http.address + include.import.name
+  @computed
+  get importConfig() {
+    const action = this.Request.address + this.Urls.import.src
     return {
       name: 'file',
       multiple: true,
@@ -242,7 +292,7 @@ export default class Store extends SwaggerModel {
           // NProgress.done();
           if (response.status == 200) {
             // 刷新数据
-            this.onGet();
+            this.onSearch();
             message.success(`${info.file.name} file uploaded successfully.`)
           } else {
             message.error(`${info.file.name} ${response.message}`)
@@ -258,24 +308,17 @@ export default class Store extends SwaggerModel {
    * @param params 筛选参数
    */
   async onExport(params = this.searchParams) {
-    await this.Http.download({
-      url: APIADDRESS + this.StoreConfig.address + include.export.name,
+    await this.Request.download({
+      url: this.Request.address + this.Urls.export.src,
       body: params
     })
   }
   /**
-  * 模板
+  * 数据模板
   */
   async onTemplate() {
-    //   url: APIADDRESS + this.StoreConfig.address + include.template.name,
-    await this.Http.download({
-      url: APIADDRESS + this.StoreConfig.address + include.template.name,
+    await this.Request.download({
+      url: this.Request.address + this.Urls.template.src,
     })
-  }
-  /**
-   * 获取公共属性
-   */
-  async getCombo(parmas: WTM.ICommon) {
-    return await Common.getCombo(parmas)
   }
 }

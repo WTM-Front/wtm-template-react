@@ -1,4 +1,4 @@
-import StoreBasice from 'wtm/core/StoreBasice';
+import StoreBasice from 'wtm/core/StoreBasice_new';
 /**
  * 不要直接修改 wtm 组件 使用继承重写的方式修改
  */

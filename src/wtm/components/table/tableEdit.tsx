@@ -7,7 +7,8 @@
 */
 import { Alert, Button, Divider, Drawer, Form, Icon, Modal, Popconfirm, Row, Select, Spin, Tabs, Upload, List, Checkbox } from 'antd';
 import { FormComponentProps, WrappedFormUtils } from 'antd/lib/form/Form';
-import Store from '../../core/StoreBasice';
+// import Store from '../../core/StoreBasice';
+import Store from '../../core/StoreBasice_new';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import moment from 'moment';
@@ -17,7 +18,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 const Dragger = Upload.Dragger;
- interface ITableEdit {
+interface ITableEdit {
   /** 状态 */
   Store: Store,
   /** 属性item */
@@ -47,7 +48,7 @@ export default class TableEditComponent extends React.Component<ITableEdit, any>
     const button = [];
     const { Actions, selectedRowKeys } = this.Store;
     const deletelength = selectedRowKeys.length;
-    if (Actions.install) {
+    if (Actions.insert) {
       button.push(<Button icon="folder-add" onClick={this.Store.onModalShow.bind(this.Store, {})}>添加</Button>)
     }
     if (Actions.import) {
@@ -126,7 +127,7 @@ class HideInstall extends React.Component<{ Store: Store }, any> {
     });
   }
   onChange(checkedValues) {
-    this.Store.appendInstall = checkedValues
+    this.Store.SwaggerModel.appendInsert = checkedValues
   }
   render() {
     return (
@@ -142,10 +143,10 @@ class HideInstall extends React.Component<{ Store: Store }, any> {
           visible={this.state.visible}
           className="app-hide-install-drawer"
         >
-          <Checkbox.Group defaultValue={this.Store.appendInstall.map(x => x.key)} onChange={this.onChange.bind(this)}>
+          <Checkbox.Group defaultValue={this.Store.SwaggerModel.appendInsert.map(x => x.key)} onChange={this.onChange.bind(this)}>
             <List
               bordered
-              dataSource={this.Store.hideInstall}
+              dataSource={this.Store.SwaggerModel.hideInsert}
               renderItem={item => (<List.Item>
                 <Checkbox value={item.key} >{item.description}</Checkbox>
               </List.Item>)}
@@ -170,7 +171,7 @@ class FormComponent extends React.Component<Props, any> {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        values = mapValues(values, this.Store.dateFormat)
+        values = mapValues(values, "YYYY-MM-DD")
         this.Store.onEdit(values);
       }
     });
@@ -201,10 +202,10 @@ class FormComponent extends React.Component<Props, any> {
    */
   moment(date) {
     if (date == '' || date == null || date == undefined) {
-      date = moment(new Date(), this.Store.dateFormat);
+      date = moment(new Date(), this.Store.Format.date);
     }
     if (typeof date == 'string') {
-      date = moment(date, this.Store.dateFormat)
+      date = moment(date, this.Store.Format.date)
     } else {
       date = moment(date)
     }
@@ -228,7 +229,7 @@ class FormComponent extends React.Component<Props, any> {
     let renderItem = this.props.renderItem({ form: this.props.form, initialValue: this.initialValue.bind(this) }) as any;
     // 没有传递 表单项 由框架解析
     if (typeof renderItem == "undefined") {
-      renderItem = this.Store.install.map(x => <FormItem label={x.description} {...formItemLayout} key={x.key}>
+      renderItem = this.Store.SwaggerModel.insert.map(x => <FormItem label={x.description} {...formItemLayout} key={x.key}>
         {getFieldDecorator(x.key, {
           rules: x.rules,
           initialValue: this.initialValue(x.key, x.format),
@@ -237,7 +238,7 @@ class FormComponent extends React.Component<Props, any> {
         )}
       </FormItem>);
     }
-    const appendInstall = this.Store.appendInstall.map(x => <FormItem label={x.description} {...formItemLayout} key={x.key}>
+    const appendInstall = this.Store.SwaggerModel.appendInsert.map(x => <FormItem label={x.description} {...formItemLayout} key={x.key}>
       {getFieldDecorator(x.key, {
         rules: x.rules,
         initialValue: this.initialValue(x.key, x.format),
@@ -354,7 +355,7 @@ export function DecoratorsTableEdit(Store: Store) {
     return class extends React.Component<any, any> {
       render() {
         return <TableEditComponent Store={Store} renderItem={(params) => {
-          return <Component {...params} Store={Store}/>
+          return <Component {...params} Store={Store} />
         }} />
       }
     }

@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { Button, Col, Divider, Form, Row, Select, Spin, Drawer, Checkbox, List } from 'antd';
-import Store from '../../core/StoreBasice';
+import Store from '../../core/StoreBasice_new';
 import * as React from 'react';
 import lodash from 'lodash';
 import moment from 'moment';
@@ -85,7 +85,7 @@ class FormComponent extends React.Component<Props, any> {
       return date;
     }
     if (typeof date == 'string') {
-      date = moment(date, this.Store.dateFormat)
+      date = moment(date, this.Store.Format.date)
     } else {
       date = moment(date)
     }
@@ -99,8 +99,8 @@ class FormComponent extends React.Component<Props, any> {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // 转换时间对象  moment 对象 valueOf 为时间戳，其他类型数据 为原始数据。
-        values = mapValues(values, this.Store.dateFormat)
-        this.Store.onGet(values)
+        values = mapValues(values, this.Store.Format.date)
+        this.Store.onSearch(values)
       }
     });
   }
@@ -111,10 +111,7 @@ class FormComponent extends React.Component<Props, any> {
     // this.forceUpdate();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.Store.onGet({
-          pageNo: 1,
-          ...lodash.mapValues(values, x => undefined)
-        })
+        this.Store.onSearch(lodash.mapValues(values, x => undefined))
       }
     });
   }
@@ -156,7 +153,7 @@ class ColumnsComponent extends React.Component<{ Store: Store }, any> {
   }
   onSubmit() {
     if (this.checkedValues.length) {
-      this.Store.columns = this.checkedValues;
+      this.Store.SwaggerModel.columns = this.checkedValues;
       dispatchEvent(new CustomEvent('resize'));
     }
     this.onVisible();
@@ -175,10 +172,10 @@ class ColumnsComponent extends React.Component<{ Store: Store }, any> {
           destroyOnClose={true}
           className="app-hide-install-drawer"
         >
-          <Checkbox.Group defaultValue={this.Store.columns.map(x => x.dataIndex)} onChange={this.onChange.bind(this)}>
+          <Checkbox.Group defaultValue={this.Store.SwaggerModel.columns.map(x => x.dataIndex)} onChange={this.onChange.bind(this)}>
             <List
               bordered
-              dataSource={this.Store.allColumns}
+              dataSource={this.Store.SwaggerModel.allColumns}
               renderItem={item => (<List.Item>
                 <Checkbox value={item.dataIndex} >{item.title}</Checkbox>
               </List.Item>)}
@@ -204,7 +201,7 @@ export function DecoratorsTableHeader(Store: Store) {
     return class extends React.Component<any, any> {
       render() {
         return <TableHeaderComponent Store={Store} renderItem={(params) => {
-          return <Component {...params} Store={Store}/>
+          return <Component {...params} Store={Store} />
         }} />
       }
     }

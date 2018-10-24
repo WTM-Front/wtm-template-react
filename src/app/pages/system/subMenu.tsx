@@ -129,7 +129,7 @@ class DrawerComponent extends React.Component<any, any> {
         return (
             <div>
                 <Button type="primary" onClick={this.showDrawer}>
-                    Open drawer
+                    保存菜单
         </Button>
                 <Drawer
                     title="Multi-level drawer"

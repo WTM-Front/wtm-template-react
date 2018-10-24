@@ -30,7 +30,7 @@ export class HttpBasics {
     /** 
      * 请求路径前缀
      */
-    address = APIADDRESS + ""
+    address = APIADDRESS
     /**
      * 请求头
      */
@@ -80,6 +80,15 @@ export class HttpBasics {
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, body as any);
+        if (/\/{\S*}/.test(url)) {
+            if (typeof body == "object") {
+                const urlStr = lodash.compact(url.match(/\/{\w[^\/{]*}/g).map(x => {
+                    return body[x.match(/{(\w*)}/)[1]];
+                })).join("/");
+                url = url.replace(/\/{\S*}/, "/") + urlStr;
+                body = {};
+            }
+        }
         return Rx.Observable.ajax.get(
             url,
             headers
@@ -95,6 +104,7 @@ export class HttpBasics {
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body, "body", headers);
         url = this.compatibleUrl(this.address, url);
+
         return Rx.Observable.ajax.post(
             url,
             body,
@@ -228,7 +238,8 @@ export class HttpBasics {
         endStr = endStr || ''
         if (/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(url)) {
             return `${url}${endStr}`;
-        } else {
+        }
+        else {
             // address  / 结尾  url / 开头
             const isAddressWith = lodash.endsWith(address, "/")
             const isUrlWith = lodash.startsWith(url, "/")

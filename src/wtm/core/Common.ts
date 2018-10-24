@@ -23,7 +23,7 @@ class Common {
     /** 缓存数据 */
     Cache = new Map<string, any>();
     /** 获取 公共数据 */
-    async getCombo(parmas: ICommon) {
+    async getCombo(parmas: WTM.ICommon) {
         const key = JSON.stringify(parmas)
         if (this.Cache.has(key)) {
             return this.Cache.get(key);

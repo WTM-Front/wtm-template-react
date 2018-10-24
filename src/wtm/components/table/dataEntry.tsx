@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { DatePicker, Input, InputNumber, Select, Spin } from 'antd';
-import Store from '../../core/StoreBasice';
+import Store from '../../core/StoreBasice_new';
 import moment from 'moment';
 import * as React from 'react';
 const RangePicker = DatePicker.RangePicker;
@@ -15,7 +15,7 @@ export interface IDataEntryProps {
     Store?: Store;
     format?: string;
     example?: any;
-    common?: ICommon;
+    common?: WTM.ICommon;
     // 表单组件传递
     placeholder?: string;
     onChange?: (value: any) => void;
@@ -61,13 +61,13 @@ export default class DataEntry extends React.Component<IDataEntryProps, any> {
         }
         // 日期选择
         if (example && example.date === true) {
-            return <DatePicker showTime format={Store.dateTimeFormat} {...GetFieldDecoratorOptions} />
+            return <DatePicker showTime format={Store.Format.dateTime} {...GetFieldDecoratorOptions} />
         }
         // 日期区选择
         if (example && example.datetime === true) {
             GetFieldDecoratorOptions.placeholder = [GetFieldDecoratorOptions.placeholder, GetFieldDecoratorOptions.placeholder]
             return <>
-                <RangePicker showTime format={Store.dateTimeFormat} {...GetFieldDecoratorOptions} />
+                <RangePicker showTime format={Store.Format.dateTime} {...GetFieldDecoratorOptions} />
             </>
         }
         switch (format) {
@@ -75,7 +75,7 @@ export default class DataEntry extends React.Component<IDataEntryProps, any> {
             case "date-time":
                 return <DatePicker
                     showTime
-                    format={Store.dateTimeFormat}
+                    format={Store.Format.dateTime}
                     {...GetFieldDecoratorOptions} />
             // 数字
             case "int32":
@@ -103,7 +103,7 @@ export class DataEntrySelect extends React.Component<IDataEntryProps, any> {
         })
     }
     async componentDidMount() {
-        const data = await this.Store.getCombo(this.props.common)
+        const data = await this.Store.Common.getCombo(this.props.common)
         this.setState({
             loading: false,
             data: data

@@ -27,7 +27,7 @@ class ActionComponent extends React.Component<{ Store: any, data: any }, any> {
     async onDelete() {
         let data = await this.Store.onDelete([this.props.data])
         if (data) {
-            this.Store.onGet();
+            this.Store.onSearch();
         }
     }
     render() {
