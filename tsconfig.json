@@ -1,27 +1,17 @@
 {
   "compilerOptions": {
-    "locale": "en-us",
-    "target": "es5", 
-    "module": "esnext",
-    "lib": [
-      "dom",
-      "esnext",
-      "esnext.array",
-      "esnext.asynciterable",
-      "esnext.intl",
-      "esnext.symbol",
-    ],
     "baseUrl": "src",
-    "rootDir": ".",
     "paths": {
       "app": ["app/*"],
       "assets": ["assets/*"],
       "components": ["components/*"],
       "containers": ["containers/*"],
       "store": ["store/*"],
-      "utils": ["utils/*"],
-      "wtm": ["wtm/*"]
+      "utils": ["utils/*"]
     }, 
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["es6","esnext", "dom"],
     "allowJs": true, 
     "jsx": "react", 
     "sourceMap": true, 
@@ -34,10 +24,9 @@
     "allowUnreachableCode": true
   },
   "include": [
-    "./src"
+    "src"
   ],
   "exclude": [
-    "./wtmfront",
-    "./node_modules",
+    "src/index.js"
   ]
 }

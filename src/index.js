@@ -5,20 +5,18 @@
  * @modify date 2018-09-10 02:18:59
  * @desc [description]
 */
-/// <reference path="../typings/index.d.ts" />
-/// <reference path="../typings/swagger.d.ts" />
-import 'babel-polyfill';
 require('antd/dist/antd.less')
 require('ant-design-pro/dist/ant-design-pro.css')
 require('nprogress/nprogress.css')
+import { notification } from 'antd';
 import App from "app/index";
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import "./style.less";
-import { notification } from 'antd';
 notification.config({
   duration: 3,
   top: 60
 }); 
 ReactDOM.render(<App />,
   document.getElementById('root'));
+ 

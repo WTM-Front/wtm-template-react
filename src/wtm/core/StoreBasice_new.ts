@@ -87,7 +87,7 @@ export default class Store {
   /** swagger数据模型 */
   SwaggerModel = new SwaggerModel(this.StoreConfig.Swagger);
   /** Ajax   */
-  Request = new HttpBasics(APIADDRESS);
+  Request = new HttpBasics();
   /** 搜索数据参数 */
   searchParams: any = {
 

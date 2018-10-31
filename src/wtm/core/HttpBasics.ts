@@ -30,7 +30,7 @@ export class HttpBasics {
     /** 
      * 请求路径前缀
      */
-    address = APIADDRESS
+    address = '/api'
     /**
      * 请求头
      */

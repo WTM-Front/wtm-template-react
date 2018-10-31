@@ -1,0 +1,801 @@
+{
+    "key": "b9fde5e6-97b6-482f-badd-b90cd796bc80",
+    "name": "学校操作接口",
+    "componentName": "testa",
+    "menuName": "testa",
+    "icon": "menu-fold",
+    "description": "School Controller",
+    "template": "default",
+    "actions": {
+        "insert": {
+            "state": true,
+            "name": "添加"
+        },
+        "update": {
+            "state": true,
+            "name": "修改"
+        },
+        "delete": {
+            "state": true,
+            "name": "删除"
+        },
+        "import": {
+            "state": true,
+            "name": "导入"
+        },
+        "export": {
+            "state": true,
+            "name": "导出"
+        }
+    },
+    "urls": {
+        "search": {
+            "src": "/school/search",
+            "method": "post"
+        },
+        "details": {
+            "src": "/school/get/{id}",
+            "method": "get"
+        },
+        "insert": {
+            "src": "/school/add",
+            "method": "post"
+        },
+        "update": {
+            "src": "/school/edit",
+            "method": "post"
+        },
+        "delete": {
+            "src": "/school/delete",
+            "method": "post"
+        },
+        "import": {
+            "src": "/school/import",
+            "method": "post"
+        },
+        "export": {
+            "src": "/school/export",
+            "method": "post"
+        },
+        "template": {
+            "src": "/school/template",
+            "method": "post"
+        }
+    },
+    "idKey": "id",
+    "columns": [
+        {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "allowEmptyValue": false,
+            "minimum": 0,
+            "maximum": 20,
+            "exclusiveMinimum": false,
+            "exclusiveMaximum": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "name"
+        },
+        {
+            "type": "string",
+            "description": "地址",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "address"
+        },
+        {
+            "type": "string",
+            "description": "备注",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "remark"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建日期",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdate"
+        },
+        {
+            "type": "string",
+            "description": "创建人",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createby"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "修改日期",
+            "allowEmptyValue": true,
+            "rules": [],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedate"
+        },
+        {
+            "type": "string",
+            "description": "修改人",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updateby"
+        }
+    ],
+    "search": [
+        {
+            "type": "string",
+            "format": "date-time",
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdateFrom"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdateTo"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedateFrom"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedateTo"
+        },
+        {
+            "type": "string",
+            "description": "名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "name"
+        },
+        {
+            "type": "string",
+            "description": "地址",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "address"
+        },
+        {
+            "type": "string",
+            "description": "备注",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "remark"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建日期",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdate"
+        },
+        {
+            "type": "string",
+            "description": "创建人",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createby"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "修改日期",
+            "allowEmptyValue": true,
+            "rules": [],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedate"
+        },
+        {
+            "type": "string",
+            "description": "修改人",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updateby"
+        }
+    ],
+    "insert": [
+        {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "allowEmptyValue": false,
+            "minimum": 0,
+            "maximum": 20,
+            "exclusiveMinimum": false,
+            "exclusiveMaximum": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "name"
+        },
+        {
+            "type": "string",
+            "description": "地址",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "address"
+        },
+        {
+            "type": "string",
+            "description": "备注",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "remark"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建日期",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdate"
+        },
+        {
+            "type": "string",
+            "description": "创建人",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createby"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "修改日期",
+            "allowEmptyValue": true,
+            "rules": [],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedate"
+        },
+        {
+            "type": "string",
+            "description": "修改人",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updateby"
+        }
+    ],
+    "update": [
+        {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "allowEmptyValue": false,
+            "minimum": 0,
+            "maximum": 20,
+            "exclusiveMinimum": false,
+            "exclusiveMaximum": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "name"
+        },
+        {
+            "type": "string",
+            "description": "地址",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "address"
+        },
+        {
+            "type": "string",
+            "description": "备注",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 500,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 500,
+                    "message": "max length 500!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "remark"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "创建日期",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createdate"
+        },
+        {
+            "type": "string",
+            "description": "创建人",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "Please input your undefined!"
+                },
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "createby"
+        },
+        {
+            "type": "string",
+            "format": "date-time",
+            "description": "修改日期",
+            "allowEmptyValue": true,
+            "rules": [],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updatedate"
+        },
+        {
+            "type": "string",
+            "description": "修改人",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "min length 0!"
+                },
+                {
+                    "max": 50,
+                    "message": "max length 50!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "updateby"
+        }
+    ]
+}

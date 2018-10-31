@@ -29,7 +29,7 @@
             ]
         },
         {
-            "Key": "5d9ee83b-06fb-4e87-826a-1b38feac3ce3",
+            "Key": "63bb72d4-ee4d-4c26-82d0-ec0d070c0cf9",
             "Name": "test",
             "Icon": "menu-fold",
             "Path": "/test",
@@ -44,26 +44,26 @@
                     "name": "修改"
                 },
                 {
-                    "state": true,
+                    "state": false,
                     "name": "删除"
                 },
                 {
-                    "state": true,
+                    "state": false,
                     "name": "导入"
                 },
                 {
-                    "state": true,
+                    "state": false,
                     "name": "导出"
                 }
             ],
             "Children": []
         },
         {
-            "Key": "cb51b2a4-e99b-4ce0-8141-6bc7d9d0279a",
-            "Name": "test",
+            "Key": "b9fde5e6-97b6-482f-badd-b90cd796bc80",
+            "Name": "testa",
             "Icon": "menu-fold",
-            "Path": "/test",
-            "Component": "test",
+            "Path": "/testa",
+            "Component": "testa",
             "Action": [
                 {
                     "state": true,
