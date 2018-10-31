@@ -27,10 +27,11 @@ class Store {
     /** 菜单 */
     @observable subMenu: subMenu[] = [];
     /**
-     * 获取菜单
+     * 获取组件菜单
      */
     async getMenu() {
         let menu = [];
+        console.log(process.env,process);
         if (User.User.role == "administrator") {
             const res = await import("../../subMenu.json");
             menu = res.subMenu;

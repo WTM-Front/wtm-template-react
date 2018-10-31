@@ -27,6 +27,66 @@
                     "Children": []
                 }
             ]
+        },
+        {
+            "Key": "5d9ee83b-06fb-4e87-826a-1b38feac3ce3",
+            "Name": "test",
+            "Icon": "menu-fold",
+            "Path": "/test",
+            "Component": "test",
+            "Action": [
+                {
+                    "state": true,
+                    "name": "添加"
+                },
+                {
+                    "state": true,
+                    "name": "修改"
+                },
+                {
+                    "state": true,
+                    "name": "删除"
+                },
+                {
+                    "state": true,
+                    "name": "导入"
+                },
+                {
+                    "state": true,
+                    "name": "导出"
+                }
+            ],
+            "Children": []
+        },
+        {
+            "Key": "cb51b2a4-e99b-4ce0-8141-6bc7d9d0279a",
+            "Name": "test",
+            "Icon": "menu-fold",
+            "Path": "/test",
+            "Component": "test",
+            "Action": [
+                {
+                    "state": true,
+                    "name": "添加"
+                },
+                {
+                    "state": true,
+                    "name": "修改"
+                },
+                {
+                    "state": true,
+                    "name": "删除"
+                },
+                {
+                    "state": true,
+                    "name": "导入"
+                },
+                {
+                    "state": true,
+                    "name": "导出"
+                }
+            ],
+            "Children": []
         }
     ]
 }

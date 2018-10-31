@@ -17,6 +17,9 @@ module.exports = (params) => {
         },
         deployWrite: deployWrite,
         DefinePlugin: {
+            'process.env': {
+                NODE_ENV: '"production"'
+            },
             ...DefinePlugin
         }
     })]
