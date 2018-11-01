@@ -60,10 +60,10 @@ module.exports = {
     },
     // 公共接口地址
     public: [
-        "common"
+        
     ],
     // 排除
     exclude: [
-        "rabbitmq"
+       
     ]
 }
