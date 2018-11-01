@@ -156,26 +156,33 @@ export default class Store {
 
   /**
    * 加载数据 列表
-   * @param params 搜索参数
+   * @param search 搜索条件 
+   * @param sort 排序字段
+   * @param pageNo 页码
+   * @param pageSize 数据条数
    */
-  async onSearch(params: any = {}, page: any = { pageNo: 1, pageSize: 10 }) {
+  async onSearch(search: any = {}, sort: string = "", pageNo: number = 1, pageSize: number = 10) {
     if (this.pageState.loading == true) {
       return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
-    this.searchParams = { ...this.searchParams, ...params };
-    params = {
-      ...page,
+    this.searchParams = { ...this.searchParams, ...search };
+    search = {
+      pageNo,
+      pageSize,
+      sort,
       search: this.searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
-    const res = await this.Request[method](src, params).map(data => {
+    const res = await this.Request[method](src, search).map(data => {
       if (data.list) {
         data.list = data.list.map((x, i) => {
           // antd table 列表属性需要一个唯一key
           return { key: i, ...x }
         })
+      } else {
+        message.warn('返回数据并为标准table数据类型')
       }
       return data
     }).toPromise()
@@ -276,7 +283,7 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.address + this.Urls.import.src
+    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.import.src)
     return {
       name: 'file',
       multiple: true,
@@ -309,7 +316,7 @@ export default class Store {
    */
   async onExport(params = this.searchParams) {
     await this.Request.download({
-      url: this.Request.address + this.Urls.export.src,
+      url: this.Urls.export.src,
       body: params
     })
   }
@@ -318,7 +325,7 @@ export default class Store {
   */
   async onTemplate() {
     await this.Request.download({
-      url: this.Request.address + this.Urls.template.src,
+      url: this.Urls.template.src,
     })
   }
 }

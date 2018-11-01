@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { DatePicker, Input, InputNumber, Select, Spin } from 'antd';
-import Store from '../../core/StoreBasice_new';
+import Store from '../../core/StoreBasice';
 import moment from 'moment';
 import * as React from 'react';
 const RangePicker = DatePicker.RangePicker;

@@ -5,9 +5,9 @@
  * @modify date 2018-09-10 02:18:59
  * @desc [description]
 */
-require('antd/dist/antd.less')
-require('ant-design-pro/dist/ant-design-pro.css')
-require('nprogress/nprogress.css')
+import 'antd/dist/antd.less'
+import 'ant-design-pro/dist/ant-design-pro.css'
+import 'nprogress/nprogress.css'
 import { notification } from 'antd';
 import App from "app/index";
 import * as React from 'react';

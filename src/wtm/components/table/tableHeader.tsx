@@ -6,7 +6,7 @@
  * @desc [description]
 */
 import { Button, Col, Divider, Form, Row, Select, Spin, Drawer, Checkbox, List } from 'antd';
-import Store from '../../core/StoreBasice_new';
+import Store from '../../core/StoreBasice';
 import * as React from 'react';
 import lodash from 'lodash';
 import moment from 'moment';

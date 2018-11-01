@@ -5,8 +5,8 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Divider, Popconfirm, Row, Table } from 'antd';
-import Store from '../../core/StoreBasice_new';
+import { Divider, Popconfirm, Row, Table, Alert } from 'antd';
+import Store from '../../core/StoreBasice';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import * as React from 'react';
@@ -71,6 +71,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
         }
         break;
     }
+    console.log(column);
     return {
       ...column,
       sorter: true,
@@ -100,10 +101,8 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    * @param sorter 
    */
   onChange(page, filters, sorter) {
-    this.Store.onSearch({}, {
-      pageNo: page.current,
-      pageSize: page.pageSize
-    })
+    console.log(sorter);
+    this.Store.onSearch({}, sorter.columnKey, page.current, page.pageSize)
   }
 
   /**
@@ -145,7 +144,7 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
   resize: Subscription;
   private rowDom: HTMLDivElement;
   componentDidMount() {
-    this.Store.onSearch();
+    this.Store.onSearch({}, "", this.Store.dataSource.pageNo, this.Store.dataSource.pageSize);
     this.initColumns();
     // 窗口变化重新计算列宽度
     this.resize = Rx.Observable.fromEvent(window, "resize").debounceTime(800).subscribe(e => {
@@ -171,31 +170,45 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
       dataIndex: 'Action',
       render: this.renderAction.bind(this),
     })
-    return (
-      <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
-        <Divider />
-        <Table
-          bordered
-          components={this.components}
-          dataSource={dataSource.list.slice()}
-          onChange={this.onChange.bind(this)}
-          columns={columns}
-          rowSelection={rowSelection}
-          loading={this.Store.pageState.loading}
-          pagination={
-            {
-              // hideOnSinglePage: true,//只有一页时是否隐藏分页器
-              position: "top",
-              showSizeChanger: true,//是否可以改变 pageSize
-              pageSize: dataSource.pageSize,
-              defaultPageSize: dataSource.pageSize,
-              defaultCurrent: dataSource.pageNo,
-              total: dataSource.count
+    if (dataSource.list) {
+      return (
+        <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
+          <Divider />
+          <Table
+            bordered
+            components={this.components}
+            dataSource={dataSource.list.slice()}
+            onChange={this.onChange.bind(this)}
+            columns={columns}
+            rowSelection={rowSelection}
+            loading={this.Store.pageState.loading}
+            pagination={
+              {
+                // hideOnSinglePage: true,//只有一页时是否隐藏分页器
+                position: "top",
+                showSizeChanger: true,//是否可以改变 pageSize
+                pageSize: dataSource.pageSize,
+                current: dataSource.pageNo,
+                defaultPageSize: dataSource.pageSize,
+                defaultCurrent: dataSource.pageNo,
+                total: dataSource.count
+              }
             }
-          }
+          />
+        </Row>
+      );
+    } else {
+      return <div>
+        <Divider />
+        <Alert
+          showIcon
+          message="数据格式并非table标准格式请使用其他模板或者检查接口数据是否有误"
+          type="warning"
+          closable
         />
-      </Row>
-    );
+      </div>
+    }
+
   }
 }
 /**
@@ -212,9 +225,9 @@ class ActionComponent extends React.Component<{ Store: Store, data: any }, any> 
   render() {
     return (
       <>
-        {this.Store.Actions.update ? <a onClick={this.Store.onModalShow.bind(this.Store, this.props.data)} >修改</a> : null}
+        {this.Store.Actions.update.state ? <a onClick={this.Store.onModalShow.bind(this.Store, this.props.data)} >修改</a> : null}
         <Divider type="vertical" />
-        {this.Store.Actions.delete ?
+        {this.Store.Actions.delete.state ?
           <Popconfirm title="Sure to delete?" onConfirm={this.onDelete.bind(this)} >
             <a >删除</a>
           </Popconfirm> : null}

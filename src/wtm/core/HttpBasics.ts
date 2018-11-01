@@ -30,7 +30,7 @@ export class HttpBasics {
     /** 
      * 请求路径前缀
      */
-    address = '/api'
+    address = '/'
     /**
      * 请求头
      */
@@ -42,7 +42,7 @@ export class HttpBasics {
     /**
      * 请求超时设置
      */
-    timeout = 3000;
+    timeout = 99999;
     /**
      * ajax
      */
@@ -78,7 +78,6 @@ export class HttpBasics {
      */
     get(url: string, body?: { [key: string]: any } | string, headers?: Object) {
         headers = { ...this.headers, ...headers };
-        body = this.formatBody(body);
         if (/\/{\S*}/.test(url)) {
             if (typeof body == "object") {
                 const urlStr = lodash.compact(url.match(/\/{\w[^\/{]*}/g).map(x => {
@@ -88,6 +87,7 @@ export class HttpBasics {
                 body = {};
             }
         }
+        body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, body as any);
         return Rx.Observable.ajax.get(
             url,
@@ -156,6 +156,7 @@ export class HttpBasics {
         }
         this.downloadLoading = true;
         NProgress.start();
+        AjaxRequest.url = this.compatibleUrl(this.address, AjaxRequest.url);
         AjaxRequest = {
             // url: url,
             method: "post",
@@ -243,6 +244,7 @@ export class HttpBasics {
             // address  / 结尾  url / 开头
             const isAddressWith = lodash.endsWith(address, "/")
             const isUrlWith = lodash.startsWith(url, "/")
+            // debugger
             if (isAddressWith) {
                 if (isUrlWith) {
                     url = lodash.trimStart(url, "/")

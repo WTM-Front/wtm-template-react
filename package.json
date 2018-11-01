@@ -2,10 +2,11 @@
   "name": "my-test",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://10.99.246.52:8010",
+  "proxy": "http://118.24.147.230:8000",
   "scripts": {
     "start": "rimraf ./build && react-app-rewired start",
     "build": "rimraf ./build && react-app-rewired build",
+    "wtm": "wtm server",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

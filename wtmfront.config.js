@@ -11,9 +11,9 @@ module.exports = {
     // 生成组件存放路径
     containers: "src/containers",
     // api 地址
-    apiUrl: "http://10.99.246.52:8010",
+    apiUrl: "http://118.24.147.230:8000",
     // swagger doc 地址
-    swaggerDoc: "http://localhost:8765/api-docs",
+    swaggerDoc: "http://118.24.147.230:8000/v2/api-docs",
     // 规范 接口
     include: {
         // 列表搜索

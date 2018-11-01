@@ -8,7 +8,7 @@
 import { Alert, Button, Divider, Drawer, Form, Icon, Modal, Popconfirm, Row, Select, Spin, Tabs, Upload, List, Checkbox } from 'antd';
 import { FormComponentProps, WrappedFormUtils } from 'antd/lib/form/Form';
 // import Store from '../../core/StoreBasice';
-import Store from '../../core/StoreBasice_new';
+import Store from '../../core/StoreBasice';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import moment from 'moment';
@@ -48,13 +48,13 @@ export default class TableEditComponent extends React.Component<ITableEdit, any>
     const button = [];
     const { Actions, selectedRowKeys } = this.Store;
     const deletelength = selectedRowKeys.length;
-    if (Actions.insert) {
+    if (Actions.insert.state) {
       button.push(<Button icon="folder-add" onClick={this.Store.onModalShow.bind(this.Store, {})}>添加</Button>)
     }
-    if (Actions.import) {
+    if (Actions.import.state) {
       button.push(<Button icon="cloud-download" onClick={() => { this.Store.onPageState("visiblePort", true) }}>  导入 / 导出 </Button>)
     }
-    if (Actions.delete) {
+    if (Actions.delete.state) {
       button.push(
         <Popconfirm placement="right" title={`Sure to delete ? length : (${deletelength}) `} onConfirm={this.onDelete.bind(this)} okText="Yes" cancelText="No">
           <Button icon="delete" disabled={deletelength < 1}>
@@ -280,7 +280,7 @@ class PortComponent extends React.Component<{ Store: Store }, any> {
   render() {
     return (
       <Modal
-        title="Import&Export"
+        title="导入&导出"
         centered
         visible={this.Store.pageState.visiblePort}
         // destroyOnClose={true}
@@ -290,7 +290,7 @@ class PortComponent extends React.Component<{ Store: Store }, any> {
         className="app-table-port-modal"
       >
         <Tabs defaultActiveKey="Import">
-          <TabPane tab={<span><Icon type="cloud-upload" />Import</span>} key="Import">
+          <TabPane tab={<span><Icon type="cloud-upload" />导入</span>} key="Import">
             <div className="app-table-port-tab-pane">
               <Button icon="download" block size="large" onClick={() => { this.Store.onTemplate() }}>模板</Button>
               <Divider />
@@ -303,7 +303,7 @@ class PortComponent extends React.Component<{ Store: Store }, any> {
             </div>
           </TabPane>
 
-          <TabPane tab={<span><Icon type="cloud-download" />Export</span>} key="Export">
+          <TabPane tab={<span><Icon type="cloud-download" />导出</span>} key="Export">
             <div className="app-table-port-tab-pane">
               <Alert message="导出当前筛选条件下的数据" type="info" showIcon />
               <Divider />
