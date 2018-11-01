@@ -70,6 +70,14 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
           }
         }
         break;
+      default:
+        column.render = (record) => {
+          try {
+            return record.toString()
+          } catch (error) {
+            return error.toString()
+          }
+        }
     }
     console.log(column);
     return {
