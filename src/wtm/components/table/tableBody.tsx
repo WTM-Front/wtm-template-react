@@ -109,8 +109,15 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    * @param sorter 
    */
   onChange(page, filters, sorter) {
-    console.log(sorter);
-    this.Store.onSearch({}, sorter.columnKey, page.current, page.pageSize)
+    let sort="";
+    if (sorter.columnKey) {
+      if (sorter.order=='descend') {
+        sort=`${sorter.columnKey} desc`
+      }else{
+        sort=`${sorter.columnKey} asc`
+      }
+    }
+    this.Store.onSearch({}, sort, page.current, page.pageSize)
   }
 
   /**
