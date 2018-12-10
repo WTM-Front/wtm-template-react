@@ -5,16 +5,17 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Divider, Popconfirm, Row, Table, Alert } from 'antd';
-import Store from '../../core/StoreBasice';
+import { Alert, Button, Checkbox, Divider, Drawer, List, Popconfirm, Row, Table } from 'antd';
+import Source from 'components/drop/source';
+import update from 'immutability-helper';
 import { observer } from 'mobx-react';
 import moment from 'moment';
 import * as React from 'react';
-import lodash from 'lodash';
-import { Resizable } from 'react-resizable';
-import "./style.less";
 import ReactDOM from 'react-dom';
-import Rx, { Observable, Subscription } from 'rxjs';
+import { Resizable } from 'react-resizable';
+import Rx, { Subscription } from 'rxjs';
+import Store from '../../core/StoreBasice';
+import "./style.less";
 interface ITableBody {
   /** 状态 */
   Store: Store,
@@ -24,8 +25,11 @@ interface ITableBody {
   * @param index 
   */
   columnsMap?: (column: any, index: any, width: any) => any;
+  columnAction?: any;
+  hideBody?: boolean;
+  // renderBody?: () => React.ReactElement<any>;
   /** 操作选项 */
-  renderAction?: (text, record) => React.ReactElement<any>;
+  // renderAction?: (text, record) => React.ReactElement<any>;
 }
 /**
  * 表格渲染组件 
@@ -71,15 +75,16 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
         }
         break;
       default:
-        column.render = (record) => {
-          try {
-            return record.toString()
-          } catch (error) {
-            return error.toString()
+        if (!column.render) {
+          column.render = (record) => {
+            try {
+              return record && record.toString() || record
+            } catch (error) {
+              return error.toString()
+            }
           }
         }
     }
-    console.log(column);
     return {
       ...column,
       sorter: true,
@@ -97,10 +102,10 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    * @param record 
    */
   renderAction(text, record) {
-    if (this.props.renderAction) {
-      return this.props.renderAction(text, record);
-    }
-    return <ActionComponent {...this.props} data={record} />;
+    // if (this.props.renderAction) {
+    //   return this.props.renderAction(text, record);
+    // }
+    // return <ActionComponent {...this.props} data={record} />;
   }
   /**
    * 分页、排序、筛选变化时触发
@@ -109,12 +114,12 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
    * @param sorter 
    */
   onChange(page, filters, sorter) {
-    let sort="";
+    let sort = "";
     if (sorter.columnKey) {
-      if (sorter.order=='descend') {
-        sort=`${sorter.columnKey} desc`
-      }else{
-        sort=`${sorter.columnKey} asc`
+      if (sorter.order == 'descend') {
+        sort = `${sorter.columnKey} desc`
+      } else {
+        sort = `${sorter.columnKey} asc`
       }
     }
     this.Store.onSearch({}, sort, page.current, page.pageSize)
@@ -180,15 +185,18 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
       onChange: e => this.Store.onSelectChange(e),
     };
     const columns = this.Store.SwaggerModel.columns.slice();
-    columns.push({
-      title: 'Action',
-      dataIndex: 'Action',
-      render: this.renderAction.bind(this),
-    })
+    // columns.push({
+    //   title: 'Action',
+    //   dataIndex: 'Action',
+    //   render: this.renderAction.bind(this),
+    // })
+    if (this.props.columnAction) {
+      columns.push({ width: 80, ...this.props.columnAction })
+    }
     if (dataSource.list) {
       return (
         <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
-          <Divider />
+
           <Table
             bordered
             components={this.components}
@@ -200,8 +208,14 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
             pagination={
               {
                 // hideOnSinglePage: true,//只有一页时是否隐藏分页器
-                position: "top",
+                position: "bottom",
                 showSizeChanger: true,//是否可以改变 pageSize
+                showQuickJumper: true,
+                showTotal: total => <div>
+                  <div className='app-table-total'>共 {total} 个 每页显示 </div>
+                  <ColumnsComponent Store={this.Store} />
+                </div>
+                ,
                 pageSize: dataSource.pageSize,
                 current: dataSource.pageNo,
                 defaultPageSize: dataSource.pageSize,
@@ -227,31 +241,103 @@ export default class TableBodyComponent extends React.Component<ITableBody, any>
   }
 }
 /**
- * 数据操作按钮
+ * 列配置
  */
-class ActionComponent extends React.Component<{ Store: Store, data: any }, any> {
+@observer
+class ColumnsComponent extends React.Component<{ Store: Store }, any> {
   Store = this.props.Store;
-  async onDelete() {
-    let data = await this.Store.onDelete([this.props.data])
-    if (data) {
-      this.Store.onSearch();
+  state = {
+    visible: false
+  }
+  checkedValues: any[] = this.Store.SwaggerModel.columns.map(x => x.dataIndex);
+  onVisible() {
+    this.setState(state => {
+      return { visible: !state.visible }
+    });
+  }
+  onChange(checkedValues) {
+    this.checkedValues = checkedValues
+  }
+  onSubmit() {
+    if (this.checkedValues.length) {
+      this.Store.SwaggerModel.columns = this.checkedValues;
+      dispatchEvent(new CustomEvent('resize'));
     }
+    this.onVisible();
+  }
+  moveCard(dragIndex: number, hoverIndex: number) {
+    const drag = this.Store.SwaggerModel.allColumns[dragIndex];
+    this.Store.SwaggerModel.onColumnsUpdate(update(this.Store.SwaggerModel.allColumns.slice(), {
+      $splice: [[dragIndex, 1], [hoverIndex, 0, drag]]
+    }), "allColumns");
   }
   render() {
     return (
       <>
-        {this.Store.Actions.update.state ? <a onClick={this.Store.onModalShow.bind(this.Store, this.props.data)} >修改</a> : null}
-        <Divider type="vertical" />
-        {this.Store.Actions.delete.state ?
-          <Popconfirm title="Sure to delete?" onConfirm={this.onDelete.bind(this)} >
-            <a >删除</a>
-          </Popconfirm> : null}
-
-
+        <Button type="default" icon="appstore" loading={this.Store.pageState.loading} onClick={this.onVisible.bind(this)}></Button>
+        <Drawer
+          title="列配置"
+          width={320}
+          onClose={this.onVisible.bind(this)}
+          closable={false}
+          visible={this.state.visible}
+          destroyOnClose={true}
+          className="app-hide-install-drawer"
+        >
+          <Checkbox.Group defaultValue={this.checkedValues} onChange={this.onChange.bind(this)}>
+            <List
+              // bordered
+              dataSource={this.Store.SwaggerModel.allColumns}
+              renderItem={(item, index) => (
+                <Source
+                  type="Sortable"
+                  key={item.dataIndex}
+                  index={index}
+                  moveCard={this.moveCard.bind(this)}
+                >
+                  <List.Item>
+                    <Checkbox value={item.dataIndex} >{item.title}</Checkbox>
+                  </List.Item>
+                </Source>
+              )}
+            />
+          </Checkbox.Group>
+          <div className="app-drawer-btns" >
+            <Button onClick={this.onVisible.bind(this)} >取消 </Button>
+            <Divider type="vertical" />
+            <Button type="primary" onClick={this.onSubmit.bind(this)} >保存 </Button>
+          </div>
+        </Drawer>
       </>
     );
   }
 }
+/**
+ * 数据操作按钮
+ */
+// class ActionComponent extends React.Component<{ Store: Store, data: any }, any> {
+//   Store = this.props.Store;
+//   async onDelete() {
+//     let data = await this.Store.onDelete([this.props.data])
+//     if (data) {
+//       this.Store.onSearch();
+//     }
+//   }
+//   render() {
+//     return (
+//       <>
+//         {this.Store.Actions.update.state ? <a onClick={this.Store.onModalShow.bind(this.Store, this.props.data)} >修改</a> : null}
+//         <Divider type="vertical" />
+//         {this.Store.Actions.delete.state ?
+//           <Popconfirm title="Sure to delete?" onConfirm={this.onDelete.bind(this)} >
+//             <a >删除</a>
+//           </Popconfirm> : null}
+
+
+//       </>
+//     );
+//   }
+// }
 /**
  * table 装饰器
  * @param params 
@@ -261,10 +347,11 @@ export function DecoratorsTableBody(params: ITableBody) {
     return class extends React.Component<any, any> {
       render() {
         return <>
-          <TableBodyComponent {...params} />
+          <div className="app-table-divider"></div>
           <Component {...params} />
+          {params.hideBody ? null : <TableBodyComponent {...params} />}
         </>
       }
-    }
+    } as any
   }
 }

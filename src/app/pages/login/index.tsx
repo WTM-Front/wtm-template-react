@@ -52,12 +52,12 @@ export default class LoginDemo extends React.Component {
                   this.state.notice &&
                   <Alert style={{ marginBottom: 24 }} message={this.state.notice} type="error" showIcon closable />
                 }
-                <UserName name="username" />
-                <Password name="password" />
+                {/* <UserName name="username" />
+                <Password name="password" /> */}
               </Tab>
               <Tab key="tab2" tab="Mobile">
-                <Mobile name="mobile" />
-                <Captcha onGetCaptcha={() => console.log('Get captcha!')} name="captcha" />
+                {/* <Mobile name="mobile" />
+                <Captcha onGetCaptcha={() => console.log('Get captcha!')} name="captcha" /> */}
               </Tab>
               <div>
                 <Checkbox checked={this.state.autoLogin} onChange={this.changeAutoLogin}>Keep me logged in</Checkbox>

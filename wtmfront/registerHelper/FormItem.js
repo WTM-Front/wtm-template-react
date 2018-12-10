@@ -6,6 +6,7 @@
  * @desc [description]
 */
 // const typeAnalysis = require("./analysisHelper/typeAnalysis")
+// const lodash = require("lodash");
 module.exports = (Handlebars) => {
     function renderDataEntry(x) {
         let str = "";
@@ -21,43 +22,78 @@ module.exports = (Handlebars) => {
         if (x.description) {
             str += ` placeholder='${x.description}' `
         }
-        return `<DataEntry {...this.props} ${str} />`
+        return `<DataEntry Store={Store} ${str} />`
     };
-    function renderOptions(Attribute) {
-        let initialValue = `initialValue('${Attribute.key}','${Attribute.format || ''}')`;
+    function renderOptions(Attribute, info = false) {
+        let initialValue = `initialValue('${Attribute.key}','${Attribute.format || ''}'${info ? ',true' : ''})`;
         return {
             rules: Attribute.rules,
             initialValue: initialValue,
         }
     }
+    Handlebars.registerHelper('DataEntry', function (person) {
+        const { search, insert, update } = person;
+        const items = [];
+        search.map(x => {
+            items.push(x)
+        });
+        insert.map(x => {
+            if (items.some(y => y.key == x.key)) {
+                return;
+            }
+            items.push(x)
+        })
+        return items.map(x => {
+            return `// ${x.description} ${x.type} \n    ${x.key}:${renderDataEntry(x)}`
+        }).join(",\n    ");
+    });
+    // 编辑
     Handlebars.registerHelper('EditFormItem', function (person) {
         return person.filter(x => x.attribute.available).map(x => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
-            return `<FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-            {getFieldDecorator('${x.key}',{
-                rules: ${JSON.stringify(options.rules)},
-                initialValue: ${options.initialValue},
-            })(
-               ${renderDataEntry(x)}
-            )}
-        </FormItem> `
-        }).join('\n         ');
+            return `
+        <Col span={12} >
+            <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
+                {getFieldDecorator('${x.key}',{
+                    rules: ${JSON.stringify(options.rules)},
+                    initialValue: ${options.initialValue},
+                })(
+                    DataEntry.${x.key}
+                )}
+            </FormItem> 
+        </Col>`
+        }).join('');
+    });
+    // 详情信息
+    Handlebars.registerHelper('InfoFormItem', function (person) {
+        return person.map(x => {
+            // const dec = typeAnalysis(x);
+            // delete x.format;
+            const options = renderOptions(x, true);
+            return `
+        <Col span={12} >
+            <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
+               <span>{${options.initialValue}}</span>
+            </FormItem> 
+        </Col>`
+        }).join('');
     });
     Handlebars.registerHelper('HeaderFormItem', function (person) {
         return person.filter(x => x.attribute.available).map(x => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
-            return `    <Col {...colLayout} >
+            return `
+            <Col {...colLayout} key='${x.key}'>
                 <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-                {getFieldDecorator('${x.key}',{
-                    initialValue: ${options.initialValue},
-                })(
-                    ${renderDataEntry(x)}
-                )}
+                    {getFieldDecorator('${x.key}',{
+                        initialValue: ${options.initialValue},
+                    })(
+                        DataEntry.${x.key}
+                    )}
                 </FormItem>
             </Col> `
-        }).join('\n         ');
+        }).join(',');
     });
 }
 

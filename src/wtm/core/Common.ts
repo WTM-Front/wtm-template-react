@@ -14,7 +14,7 @@ import Http from './HttpBasics';
 class Common {
     constructor() {
         // console.log("Common", this);
-        this.getCustomColumn();
+        // this.getCustomColumn();
     }
     /** 列获取完成通知 */
     CustomColumnSubject = new Rx.BehaviorSubject<any>([]);
@@ -32,7 +32,7 @@ class Common {
         if (this.CacheHttp.has(key)) {
             promise = this.CacheHttp.get(key);
         } else {
-            promise = Http.get(parmas.address, parmas.params).toPromise();
+            promise = Http.post(parmas.address, parmas.params).toPromise();
             // promise = new Promise((resolve, reject) => {
             //     setTimeout(() => {
             //         const list = [];
@@ -57,7 +57,7 @@ class Common {
      * 获取列配置
      */
     async getCustomColumn() {
-        const data = await Http.get("/common/getCustomColumn").toPromise();
+        const data: any = await Http.get("/common/getCustomColumn").toPromise();
         // setTimeout(() => {
         //     this.CustomColumnSubject.next([
         //         {

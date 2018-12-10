@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Header from './components/Header';
-import Edit from './components/Edit';
+import Details from './components/Details';
 import Body from './components/Body';
 import Store from './store';
 import "./style.less";
@@ -10,7 +10,7 @@ export default class App extends React.Component<any, any> {
     return (
       <div className="app-table-content">
         <Header Store={Store} />
-        <Edit Store={Store} />
+        <Details Store={Store} />
         <Body Store={Store} />
       </div>
     );

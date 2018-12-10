@@ -5,22 +5,19 @@
  * @modify date 2018-09-12 18:53:30
  * @desc [description]
 */
-import { Button, Col, Divider, Form, Row, Select, Spin, Drawer, Checkbox, List } from 'antd';
-import Store from '../../core/StoreBasice';
-import * as React from 'react';
+import { Button, Checkbox, Col, Divider, Drawer, Form, Icon, List, Row } from 'antd';
 import lodash from 'lodash';
-import moment from 'moment';
-import { Props, renderItemParams } from './tableEdit';
 import { observer } from 'mobx-react';
-import { mapValues } from './tableEdit';
-const FormItem = Form.Item;
-const Option = Select.Option;
-
+import moment from 'moment';
+import * as React from 'react';
+import Store from '../../core/StoreBasice';
+import { mapValues, Props, renderItemParams } from './tableDetails';
+import DecoForm from 'components/decorators/form';
 interface ITableHeader {
   /** 状态 */
   Store: Store,
   /** 属性item */
-  renderItem?: (params: renderItemParams) => React.ReactElement<any>;
+  renderItem?: (params: renderItemParams) => JSX.Element | JSX.Element[];
 }
 /**
  * 搜索标题组件 
@@ -29,7 +26,7 @@ interface ITableHeader {
  */
 export default class TableHeaderComponent extends React.Component<ITableHeader, any> {
   Store = this.props.Store;
-  WrappedFormComponent = Form.create()(FormComponent);
+  // WrappedFormComponent = Form.create()(FormComponent);
   /**
    * 表单 item
    * @param param0 
@@ -43,17 +40,25 @@ export default class TableHeaderComponent extends React.Component<ITableHeader, 
     return (
       // <Spin spinning={this.Store.pageConfig.loading}>
       <Row>
-        <this.WrappedFormComponent {...this.props} renderItem={this.renderItem.bind(this)} />
+        <FormComponent {...this.props} renderItem={this.renderItem.bind(this)} />
+        {this.props.children}
       </Row>
       // </Spin>
     );
   }
 }
+
+@DecoForm()
 @observer
-class FormComponent extends React.Component<Props, any> {
-  Store = this.props.Store;
+class FormComponent extends React.Component<any, any> {
+  Store: Store = this.props.Store;
   state = {
+    // toggle: false,
     key: new Date().getTime()
+  }
+  onToggle() {
+    // this.setState({ toggle: !this.state.toggle });
+    this.Store.onPageState("searchToggle", !this.Store.pageState.searchToggle)
   }
   /**
    * 获取 数据类型默认值
@@ -92,7 +97,21 @@ class FormComponent extends React.Component<Props, any> {
     return date
   }
   renderItem() {
-    return this.props.renderItem({ form: this.props.form, initialValue: this.initialValue.bind(this) })
+    let items = null
+    const FormItems = this.props.renderItem({ form: this.props.form, initialValue: this.initialValue.bind(this) })
+    if (Array.isArray(FormItems)) {
+      if (this.Store.pageState.searchToggle) {
+        items = FormItems;
+      } else {
+        items = [...FormItems].splice(0, 3);
+      }
+    } else {
+      items = FormItems
+    }
+    return {
+      length: FormItems.length,
+      items
+    }
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -100,6 +119,7 @@ class FormComponent extends React.Component<Props, any> {
       if (!err) {
         // 转换时间对象  moment 对象 valueOf 为时间戳，其他类型数据 为原始数据。
         values = mapValues(values, this.Store.Format.date)
+        console.log("搜索参数",values);
         this.Store.onSearch(values)
       }
     });
@@ -108,7 +128,6 @@ class FormComponent extends React.Component<Props, any> {
     const { resetFields } = this.props.form;
     resetFields();
     this.setState({ key: new Date().getTime() })
-    // this.forceUpdate();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.Store.onSearch(lodash.mapValues(values, x => undefined))
@@ -116,19 +135,45 @@ class FormComponent extends React.Component<Props, any> {
     });
   }
   render() {
+    const renderItem = this.renderItem();
+    const downUp = this.Store.pageState.searchToggle ? <> 收起 <Icon type='up' /></> : <>   展开 <Icon type='down' /></>
+    const btns = <>
+      <Button icon="search" htmlType="submit" loading={this.Store.pageState.loading}>查询</Button>
+      <Divider type="vertical" />
+      <Button icon="retweet" onClick={this.onReset.bind(this)} loading={this.Store.pageState.loading}>重置</Button>
+      {renderItem.length > 3 ? <>
+        <Divider type="vertical" /> <a onClick={this.onToggle.bind(this)}>
+          {downUp}
+        </a>
+      </> : null}
+    </>
+    // 偏移值
+    let offset = 0;
+    switch (renderItem.length) {
+      case 0:
+        offset = 18;
+        break;
+      case 1:
+        offset = 12;
+        break;
+      case 2:
+        offset = 6;
+        break;
+    }
     return (
       <Form className="app-table-header-form" onSubmit={this.handleSubmit}>
         <Row type="flex" gutter={16} className="table-header-search" key={this.state.key}>
-          {this.renderItem()}
+          {renderItem.items}
+          {this.Store.pageState.searchToggle ? null : <Col span={6} offset={offset} className="table-header-btn">
+            {btns}
+          </Col>}
         </Row>
-        <Row type="flex" gutter={16} justify="end">
+        {this.Store.pageState.searchToggle ? <Row type="flex" gutter={16} justify="end">
           <Col span={24} className="table-header-btn">
-            <Button icon="retweet" onClick={this.onReset.bind(this)} loading={this.Store.pageState.loading}>重置</Button>
-            <Divider type="vertical" />
-            <Button icon="search" htmlType="submit" loading={this.Store.pageState.loading}>搜索</Button>
-            <ColumnsComponent Store={this.Store} />
+            {btns}
           </Col>
-        </Row>
+        </Row> : null}
+
       </Form>
     );
   }
@@ -196,13 +241,13 @@ class ColumnsComponent extends React.Component<{ Store: Store }, any> {
  * 编辑 装饰器
  * @param Store 状态
  */
-export function DecoratorsTableHeader(Store: Store) {
+export function DecoratorsTableHeader(params: ITableHeader) {
   return function <T extends { new(...args: any[]): {} }>(Component: any) {
     return class extends React.Component<any, any> {
       render() {
-        return <TableHeaderComponent Store={Store} renderItem={(params) => {
-          return <Component {...params} Store={Store} />
-        }} />
+        return <TableHeaderComponent Store={params.Store} renderItem={params.renderItem}>
+          <Component />
+        </TableHeaderComponent>
       }
     }
   }

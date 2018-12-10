@@ -9,7 +9,7 @@ export class Store extends StoreBasice {
     }
     /** 数据 ID 索引 */
     IdKey = '{{{ idKey }}}';
-    Actions = {{{ JSONStringify actions }}}
+    /** 接口地址 */
     Urls= {{{ JSONStringify urls }}}
 }
 export default new Store();

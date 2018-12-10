@@ -5,7 +5,7 @@
  * @modify date 2018-09-12 18:52:27
  * @desc [description] .
  */
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import NProgress from 'nprogress';
 // import wtmfront from '@WTMConfig';
@@ -20,28 +20,28 @@ export default class Store {
   /** 数据 ID 索引 */
   protected IdKey = 'id'
   /** 页面操按钮 */
-  Actions: WTM.IActions = {
-    insert: {
-      state: true,
-      name: "添加"
-    },
-    update: {
-      state: true,
-      name: "修改"
-    },
-    delete: {
-      state: true,
-      name: "删除"
-    },
-    import: {
-      state: true,
-      name: "导入"
-    },
-    export: {
-      state: true,
-      name: "导出"
-    },
-  }
+  // Actions: WTM.IActions = {
+  //   insert: {
+  //     state: true,
+  //     name: "添加"
+  //   },
+  //   update: {
+  //     state: true,
+  //     name: "修改"
+  //   },
+  //   delete: {
+  //     state: true,
+  //     name: "删除"
+  //   },
+  //   import: {
+  //     state: true,
+  //     name: "导入"
+  //   },
+  //   export: {
+  //     state: true,
+  //     name: "导出"
+  //   },
+  // }
   /** url 地址 */
   Urls: WTM.IUrls = {
     search: {
@@ -97,7 +97,7 @@ export default class Store {
     count: 0,
     list: [],
     pageNo: 1,
-    pageSize: 10
+    pageSize: 40
   }
   /** 多选行 key */
   @observable selectedRowKeys = [];
@@ -105,11 +105,14 @@ export default class Store {
   @observable details: any = {};
   /** 页面动作 */
   @observable pageState = {
-    visibleEdit: false,//编辑显示
+    searchToggle: false,//搜索条件展开
+    visibleDetails: false,//编辑显示
     visiblePort: false,//导入显示
     loading: false,//数据加载
+    loadingDetails: false,//详情加载
     loadingEdit: false,//数据提交
-    isUpdate: false//编辑状态
+    // isUpdate: false,//编辑状态
+    detailsType: "Insert"//详情类型 Insert Update Info
   }
   /**
    *  修改页面动作状态
@@ -117,7 +120,7 @@ export default class Store {
    * @param value 
    */
   @action.bound
-  onPageState(key: "visibleEdit" | "visiblePort" | "loading" | "loadingEdit" | "isUpdate", value?: boolean) {
+  onPageState(key: "searchToggle" | "visibleDetails" | "detailsType" | "visiblePort" | "loading" | "loadingDetails" | "loadingEdit", value?: any) {
     const prevVal = this.pageState[key];
     if (prevVal == value) {
       return
@@ -141,17 +144,18 @@ export default class Store {
    * 使用 @action.bound 装饰器的方法不可重写
    * @param details 详情 有唯一 key 判定为修改
    */
-  async onModalShow(details = {}) {
+  async onModalShow(details = {}, type: "Insert" | "Update" | "Info" = "Insert") {
+    this.onPageState("visibleDetails", true)
+    this.onPageState("detailsType", type)
     if (details[this.IdKey] == null) {
-      this.onPageState("isUpdate", false)
     } else {
-      this.onPageState("isUpdate", true)
+      this.onPageState("loadingDetails", true)
       details = await this.onDetails(details)
     }
     runInAction(() => {
       this.details = details
+      this.onPageState("loadingDetails", false)
     })
-    this.onPageState("visibleEdit", true)
   }
 
   /**
@@ -163,7 +167,11 @@ export default class Store {
    */
   async onSearch(search: any = {}, sort: string = "", pageNo: number = 1, pageSize: number = 10) {
     if (this.pageState.loading == true) {
-      return message.warn('数据正在加载中')
+      return
+      // notification.warn({
+      //   message: '数据正在加载中'
+      // })
+      // return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
     this.searchParams = { ...this.searchParams, ...search };
@@ -182,7 +190,10 @@ export default class Store {
           return { key: i, ...x }
         })
       } else {
-        message.warn('返回数据并为标准table数据类型')
+        notification.warn({
+          message: '返回数据并为标准table数据类型'
+        })
+        // message.warn('返回数据并为标准table数据类型')
       }
       return data
     }).toPromise()
@@ -197,11 +208,11 @@ export default class Store {
    * @param params 数据实体
    */
   async onDetails(params) {
-    this.onPageState("loadingEdit", true)
+    // this.onPageState("loadingEdit", true)
     const method = this.Urls.details.method;
     const src = this.Urls.details.src;
     const res = await this.Request[method](src, params).toPromise()
-    this.onPageState("loadingEdit", false)
+    // this.onPageState("loadingEdit", false)
     return res || {}
   }
   /**
@@ -215,7 +226,7 @@ export default class Store {
     const details = { ...this.details, ...params }
     this.onPageState("loadingEdit", true)
     // 添加 | 修改
-    if (this.pageState.isUpdate) {
+    if (this.pageState.detailsType == "Update") {
       return await this.onUpdate(details)
     }
     return await this.onInsert(details)
@@ -229,12 +240,13 @@ export default class Store {
     const src = this.Urls.insert.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
-      message.success('添加成功')
+      // message.success('添加成功')
+      notification.success({
+        message: '添加成功'
+      })
       // 刷新数据
       this.onSearch()
-      this.onPageState("visibleEdit", false)
-    } else {
-      message.error('添加失败')
+      this.onPageState("visibleDetails", false)
     }
     this.onPageState("loadingEdit", false)
     return res
@@ -248,12 +260,13 @@ export default class Store {
     const src = this.Urls.update.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
-      message.success('更新成功')
+      // message.success('更新成功')
+      notification.success({
+        message: '更新成功'
+      })
       // 刷新数据
       this.onSearch()
-      this.onPageState("visibleEdit", false)
-    } else {
-      message.error('更新失败')
+      this.onPageState("visibleDetails", false)
     }
     this.onPageState("loadingEdit", false)
     return res
@@ -268,12 +281,13 @@ export default class Store {
     const src = this.Urls.delete.src;
     const res = await this.Request[method](src, params).toPromise()
     if (res) {
-      message.success('删除成功')
+      // message.success('删除成功')
+      notification.success({
+        message: '删除成功'
+      })
       this.onSelectChange([]);
       // 刷新数据
       this.onSearch();
-    } else {
-      message.success('删除失败')
     }
     return res
   }
@@ -288,6 +302,7 @@ export default class Store {
       name: 'file',
       multiple: true,
       action: action,
+      headers: this.Request.getHeaders(),
       onChange: info => {
         const status = info.file.status
         // NProgress.start();
@@ -300,12 +315,22 @@ export default class Store {
           if (response.status == 200) {
             // 刷新数据
             this.onSearch();
-            message.success(`${info.file.name} file uploaded successfully.`)
+            // message.success(`${info.file.name} file uploaded successfully.`)
+            notification.error({
+              message: `${info.file.name} 导入成功`
+            })
           } else {
-            message.error(`${info.file.name} ${response.message}`)
+            // message.error(`${info.file.name} ${response.message}`)
+            notification.error({
+              message: `${info.file.name}`,
+              description: response.message
+            })
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`)
+          // message.error(`${info.file.name} file upload failed.`)
+          notification.error({
+            message: `${info.file.name} 导入失败`
+          })
         }
       }
     }

@@ -1,7 +1,8 @@
 import { Col, Form } from 'antd';
-import DataEntry from 'components/table/dataEntry';
-import TableHeader from 'components/table/tableHeader';
+import DataEntry from './DataEntry';
 import * as React from 'react';
+import { DecoratorsTableHeader } from 'wtm/components/table/tableHeader';
+import Store from '../store';
 const FormItem = Form.Item;
 const colLayout = {
     xl: 6,
@@ -21,12 +22,19 @@ const formItemLayout = {
 /**
  * 组件继承 支持重写,
  */
-export default class HeaderComponent extends TableHeader {
-    renderItem({ form,initialValue }) {
+@DecoratorsTableHeader({
+    Store,
+    renderItem: (props) => {
+        const { form, initialValue } = props;
         const { getFieldDecorator } = form;
-        return <>
+        return [
             {{{HeaderFormItem search}}}
-        </>
+        ]
+    }
+})
+export default class HeaderComponent extends React.Component<any, any>{
+    render() {
+        return <div></div>
     }
 }
 

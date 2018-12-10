@@ -39,7 +39,7 @@ export default class BodyComponent extends React.Component<any, any> {
         const deletelength = selectedRowKeys.length;
         return <Row className="app-table-buttons">
             <Col span={6} className="app-table-buttons-text" >
-                <span className="text-title">{{{menuName}}}列表</span><span className="text-count">共 <span>{Store.dataSource.count}</span> 条记录</span>
+                <span className="text-title">aaaaaa列表</span><span className="text-count">共 <span>{Store.dataSource.count}</span> 条记录</span>
             </Col>
             <Col span={18} className="app-table-buttons-btn" >
                 <Button icon="plus" onClick={this.Store.onModalShow.bind(this.Store, {})} type="primary">新建</Button>

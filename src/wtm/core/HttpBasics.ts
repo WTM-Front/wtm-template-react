@@ -10,6 +10,11 @@ import { message, notification } from "antd";
 import NProgress from 'nprogress';
 import lodash from 'lodash';
 import moment from 'moment';
+interface Preview {
+    data: any
+    message: string
+    status: number
+}
 export class HttpBasics {
     /**
      * 
@@ -25,12 +30,13 @@ export class HttpBasics {
             // }
             this.address = address;
         }
+        this.getHeaders()
         // this.create({ type: "get", name: "test/{c}/{a}/{b}" }, { a: 1, b: 2, c: 3 }).toPromise();
     }
     /** 
      * 请求路径前缀
      */
-    address = '/'
+    address = process.env.NODE_ENV === "development" ? '/' : '/masterdata/'
     /**
      * 请求头
      */
@@ -38,11 +44,16 @@ export class HttpBasics {
         credentials: 'include',
         accept: "*/*",
         "Content-Type": "application/json",
+        "token": null
     };
+    getHeaders() {
+        this.headers.token = window.localStorage.getItem('__token') || null;
+        return this.headers
+    }
     /**
      * 请求超时设置
      */
-    timeout = 99999;
+    timeout = 10000;
     /**
      * ajax
      */
@@ -76,7 +87,8 @@ export class HttpBasics {
      * @param body 
      * @param headers 
      */
-    get(url: string, body?: { [key: string]: any } | string, headers?: Object) {
+    get(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<Preview> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
         if (/\/{\S*}/.test(url)) {
             if (typeof body == "object") {
@@ -92,7 +104,7 @@ export class HttpBasics {
         return Rx.Observable.ajax.get(
             url,
             headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap).filter(this.filter);
     }
     /**
      * post
@@ -100,16 +112,16 @@ export class HttpBasics {
      * @param body 
      * @param headers 
      */
-    post(url: string, body?: any, headers?: Object) {
+    post(url: string, body?: any, headers?: Object): Rx.Observable<Preview> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body, "body", headers);
         url = this.compatibleUrl(this.address, url);
-
         return Rx.Observable.ajax.post(
             url,
             body,
             headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap).filter(this.filter);
     }
     /**
      * put
@@ -117,7 +129,8 @@ export class HttpBasics {
      * @param body 
      * @param headers 
      */
-    put(url: string, body?: any, headers?: Object) {
+    put(url: string, body?: any, headers?: Object): Rx.Observable<Preview> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body, "body", headers);
         url = this.compatibleUrl(this.address, url);
@@ -125,7 +138,7 @@ export class HttpBasics {
             url,
             body,
             headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap).filter(this.filter);
     }
     /**
      * delete
@@ -133,14 +146,15 @@ export class HttpBasics {
      * @param body 
      * @param headers 
      */
-    delete(url: string, body?: { [key: string]: any } | string, headers?: Object) {
+    delete(url: string, body?: { [key: string]: any } | string, headers?: Object): Rx.Observable<Preview> {
+        this.getHeaders();
         headers = { ...this.headers, ...headers };
         body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, body as any);
         return Rx.Observable.ajax.delete(
             url,
             headers
-        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap);
+        ).timeout(this.timeout).catch(err => Rx.Observable.of(err)).map(this.responseMap).filter(this.filter);
     }
     /** 文件获取状态 */
     downloadLoading = false
@@ -151,6 +165,7 @@ export class HttpBasics {
      * @param fileName 
      */
     async download(AjaxRequest: Rx.AjaxRequest, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
+        this.getHeaders();
         if (this.downloadLoading) {
             return message.warn('文件获取中，请勿重复操作~')
         }
@@ -187,7 +202,10 @@ export class HttpBasics {
                 }
                 a.click();
                 window.URL.revokeObjectURL(downUrl);
-                message.success(`文件下载成功`)
+                // message.success(`文件下载成功`)
+                notification.success({
+                    message: `文件下载成功`
+                })
             } else {
                 notification['error']({
                     key: this.notificationKey,
@@ -210,6 +228,7 @@ export class HttpBasics {
      * jsonP
      */
     jsonp(url, body?: { [key: string]: any } | string, callbackKey = 'callback') {
+        this.getHeaders();
         body = this.formatBody(body);
         url = this.compatibleUrl(this.address, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
         return new Rx.Observable(observer => {
@@ -324,46 +343,66 @@ export class HttpBasics {
     /**
      * ajax过滤
      */
-    responseMap = (x) => {
+    responseMap = (res) => {
         // 关闭加载进度条
         setTimeout(() => {
             NProgress.done();
         });
-        if (this.newResponseMap && typeof this.newResponseMap == "function") {
-            return this.newResponseMap(x);
-        }
-        if (x.status == 200) {
-            // 判断是否统一数据格式，是走状态判断，否直接返回 response
-            if (x.response && x.response.status) {
-                switch (x.response.status) {
-                    case 200:
-                        return x.response.data;
-                        break;
-                    case 204:
-                        return false;
-                        break;
-                    default:
-                        notification['error']({
-                            message: x.response.message,
-                            description: `Url: ${x.request.url} \n method: ${x.request.method}`,
-                        });
-                        return false
-                        break;
-                }
+        try {
+            // 使用传入得 过滤函数
+            if (this.newResponseMap && typeof this.newResponseMap == "function") {
+                return this.newResponseMap(res);
             }
-            return x.response
+            if (res.status == 200) {
+                // 判断是否统一数据格式，是走状态判断，否直接返回 response
+                if (res.response && res.response.status) {
+                    switch (res.response.status) {
+                        case 200:
+                            return res.response.data;
+                            break;
+                        case 204:
+                            return false;
+                            break;
+                        default:
+                            throw {
+                                url: res.request.url,
+                                request: res,
+                                message: res.response.message,
+                                response: res.response
+                            }
+                            return false
+                            break;
+                    }
+                }
+                return res.response
+            }
+            throw {
+                url: res.request.url,
+                request: res,
+                message: res.message,
+                response: false
+            }
+
+        } catch (error) {
+            console.error(error);
+            notification['error']({
+                key: 'ajaxError',
+                message: error.message,
+                duration: 10,
+                description: `Url: ${error.url}`,
+            });
+            return false
         }
-        notification['error']({
-            key: this.notificationKey,
-            message: x.message,
-            description: x.request ? `Url: ${x.request.url} \n method: ${x.request.method}` : '',
-        });
-        console.error(x);
-        // throw x;
-        return false
+    }
+    /**
+     * 过滤 map 返回的 假值  
+     */
+    filter = (data) => {
+        return data;
     }
     /** 日志 */
     log(url, body, headers) {
+
     }
 }
 export default new HttpBasics();

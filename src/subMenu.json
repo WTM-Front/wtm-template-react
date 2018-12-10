@@ -27,6 +27,36 @@
                     "Children": []
                 }
             ]
+        },
+        {
+            "Key": "b4463c43-d1c0-4d84-aff6-7c15ed926765",
+            "Name": "aaaaaa",
+            "Icon": "menu-fold",
+            "Path": "/ttttt",
+            "Component": "ttttt",
+            "Action": [
+                {
+                    "name": "添加",
+                    "key": "insert"
+                },
+                {
+                    "name": "修改",
+                    "key": "update"
+                },
+                {
+                    "name": "删除",
+                    "key": "delete"
+                },
+                {
+                    "name": "导入",
+                    "key": "import"
+                },
+                {
+                    "name": "导出",
+                    "key": "export"
+                }
+            ],
+            "Children": []
         }
     ]
 }

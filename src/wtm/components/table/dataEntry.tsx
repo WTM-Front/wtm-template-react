@@ -114,6 +114,12 @@ export class DataEntrySelect extends React.Component<IDataEntryProps, any> {
         if (this.props.example && this.props.example.multi) {
             event = event.join(",")
         }
+        // console.log(event)
+        // // 转换  数字
+        // const nVal = parseInt(event);
+        // if (!isNaN(nVal)) {
+        //     return this.props.onChange(nVal);
+        // }
         this.props.onChange(event);
     }
     render() {
@@ -124,16 +130,16 @@ export class DataEntrySelect extends React.Component<IDataEntryProps, any> {
                 </div>
             );
         }
-        let config = {
-            mode: "multiple",
+        let config: any = {
+            // mode: "multiple",
             onChange: this.onChange.bind(this),
             tokenSeparators: [','],
             placeholder: this.props.placeholder,
-            defaultValue: this.props.defaultValue
+            defaultValue: this.props.defaultValue != null && String(this.props.defaultValue)
         }
         // 非多选，删除多选属性
         if (this.props.example && !this.props.example.multi) {
-            delete config.mode;
+            // delete config.mode;
         } else {
             // 多选默认值 拆分数组
             if (config.defaultValue == "") {

@@ -75,14 +75,23 @@ declare namespace WTM {
         method: string;
         [key: string]: any;
     }
+    /** 接口地址 */
     interface IUrls {
+        /** 搜索 */
         search: IUrl;
+        /** 详情 */
         details: IUrl;
+        /** 添加 */
         insert: IUrl;
+        /** 修改 */
         update: IUrl;
+        /** 删除 */
         delete: IUrl;
+        /** 导入 */
         import: IUrl;
+        /** 导出 */
         export: IUrl;
+        /** 模板 */
         template: IUrl;
         [key: string]: IUrl;
     }
@@ -93,7 +102,7 @@ declare namespace WTM {
         address?: string;
         params?: {
             [key: string]: any
-        }
+        } | string 
     }
     /**
      * 自定义属性 .....

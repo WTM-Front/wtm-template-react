@@ -31,6 +31,7 @@ export default class SwaggerModel {
     /**
      * 所有列属性
      */
+    @observable
     allColumns = [];
     /**
     * 列属性配置
@@ -96,8 +97,12 @@ export default class SwaggerModel {
      * @param columns 
      */
     @action.bound
-    public onColumnsUpdate(columns: Icolumns[]) {
-        this._columns = columns;
+    public onColumnsUpdate(columns: Icolumns[], type: "columns" | "allColumns" = "columns") {
+        if (type == "columns") {
+            this._columns = columns;
+        } else {
+            this.allColumns = columns;
+        }
     }
     /**
      * 添加属性
