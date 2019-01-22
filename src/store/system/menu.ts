@@ -27,11 +27,10 @@ class Store {
     /** 菜单 */
     @observable subMenu: subMenu[] = [];
     /**
-     * 获取组件菜单
+     * 获取菜单
      */
     async getMenu() {
         let menu = [];
-        console.log(process.env,process);
         if (User.User.role == "administrator") {
             const res = await import("../../subMenu.json");
             menu = res.subMenu;
@@ -44,7 +43,6 @@ class Store {
                 "Children": []
             })
             
-            console.log(lodash.flattenDeep(menu));
         }
         this.setSubMenu(menu);
     }

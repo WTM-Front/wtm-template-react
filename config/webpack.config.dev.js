@@ -14,78 +14,105 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = (config, env) => {
     // config.entry.pop();
     // config.entry.push(paths.appIndexJs);
-    config.resolve.extensions = ['.mjs', '.web.ts', '.ts', '.web.tsx', '.tsx', '.web.js', '.js', '.json', '.web.jsx', '.jsx'];
+    config.resolve.extensions = ['.ts', '.tsx', '.js', '.json', '.jsx'];
     config.resolve.plugins.push(new TsconfigPathsPlugin({ configFile: paths.appTsConfig }));
     config.plugins.push(new MiniCssExtractPlugin({
-        filename: 'static/css/[name].[contenthash:8].css',
-        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+        filename: 'static/css/[name].css',
+        chunkFilename: 'static/css/[name].chunk.css',
     }));
+    cssloader = [
+        {
+            loader: 'css-loader',
+            options: {
+                importLoaders: 1,
+            },
+        },
+        {
+            loader: 'postcss-loader',
+            options: {
+                // https://github.com/facebookincubator/create-react-app/issues/2677
+                ident: 'postcss',
+                plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    require('autoprefixer')({
+                        browsers: [
+                            '>1%',
+                            'last 4 versions',
+                            'Firefox ESR',
+                            'not ie < 9', // React doesn't support IE8 anyway
+                        ],
+                        flexbox: 'no-2009',
+                    }),
+                ],
+            },
+        },
+        {
+            loader: 'less-loader',
+            options: {
+                sourceMap: true,
+                javascriptEnabled: true,
+            },
+        }
+    ]
     config.module.rules = [
         {
             oneOf: [
                 {
                     test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-                    loader: require.resolve('url-loader'),
+                    loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        name: 'static/media/[name].[hash:8].[ext]',
+                        name: 'static/media/[name].[ext]',
                     },
                 },
                 {
-                    test: /\.(tsx|ts|js|jsx)$/,
-                    include: paths.appSrc,
+                    test: /\.js$/,
+                    include: paths.appNodeModules,
+                    exclude: paths.jsExclude,
                     use: [
+                        'cache-loader',
                         {
-                            loader: require.resolve('awesome-typescript-loader'),
+                            loader: "babel-loader",
                             options: {
-
-                            },
-                        },
-                    ],
-                },
-                {
-                    test: /\.(less|css)$/,
-                    use: [
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: require.resolve('css-loader'),
-                            options: {
-                                importLoaders: 1,
-                            },
-                        },
-                        {
-                            loader: require.resolve('postcss-loader'),
-                            options: {
-                                // https://github.com/facebookincubator/create-react-app/issues/2677
-                                ident: 'postcss',
-                                plugins: () => [
-                                    require('postcss-flexbugs-fixes'),
-                                    require('autoprefixer')({
-                                        browsers: [
-                                            '>1%',
-                                            'last 4 versions',
-                                            'Firefox ESR',
-                                            'not ie < 9', // React doesn't support IE8 anyway
-                                        ],
-                                        flexbox: 'no-2009',
-                                    }),
-                                ],
-                            },
-                        },
-                        {
-                            loader: require.resolve('less-loader'),
-                            options: {
-                                sourceMap: true,
-                                javascriptEnabled: true,
-                            },
+                                // compact: true,
+                                presets: ['@babel/preset-env']
+                            }
                         }
                     ],
                 },
                 {
-                    exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
-                    loader: require.resolve('file-loader'),
+                    test: /\.(tsx|ts|js|jsx)$/,
+                    include: paths.appSrc,
+                    loader: 'awesome-typescript-loader',
                     options: {
-                        name: 'static/media/[name].[hash:8].[ext]',
+                        useCache: true,
+                        // transpileOnly: true,
+                        // errorsAsWarnings: true,
+                        usePrecompiledFiles: true,
+                    }
+                },
+                {
+                    test: /\.(less|css)$/,
+                    include: paths.appSrc,
+                    use: [
+                        'style-loader',
+                        ...cssloader
+                    ],
+                },
+                {
+                    test: /\.(less|css)$/,
+                    include: paths.appNodeModules,
+                    exclude: paths.appSrc,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        ...cssloader
+                    ],
+                },
+                {
+                    exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+                    loader: 'file-loader',
+                    options: {
+                        name: 'static/media/[name].[ext]',
                     },
                 },
             ],

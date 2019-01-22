@@ -5,13 +5,14 @@
 /.pnp
 .pnp.js
 .vscode
+.awcache
+.cache-loader
 # testing
 /coverage
 
 # production
 /build
 /wtmfront/swagger
-/src/containers/test**
 # misc
 .DS_Store
 .env.local

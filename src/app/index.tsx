@@ -4,13 +4,13 @@
  * @create date 2018-07-24 05:02:33
  * @modify date 2018-07-24 05:02:33
  * @desc [description]
-*/
+ */
 import Exception from 'ant-design-pro/lib/Exception';
 import { LocaleProvider, Skeleton } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import containers from 'containers/index';
 import lodash from 'lodash';
 import { observer } from 'mobx-react';
+import Pages from 'pages/index';
 import Animate from 'rc-animate';
 import * as React from 'react';
 import Loadable from 'react-loadable';
@@ -27,7 +27,7 @@ export default class RootRoutes extends React.Component<any, any> {
     /**
      * 路由列表
      */
-    routes: any[] = [
+   public routes: any[] = [
         {
             /**
              * 主页布局 
@@ -58,7 +58,7 @@ export default class RootRoutes extends React.Component<any, any> {
      * 初始化路由数据
      */
     initRouters() {
-        return lodash.map(containers, (component, key) => {
+        return lodash.map(Pages, (component, key) => {
             return {
                 "path": "/" + key,
                 "component": this.Loadable(component)
@@ -146,12 +146,12 @@ export default class RootRoutes extends React.Component<any, any> {
                 // 认证通过
                 if (Store.Authorize.onPassageway(this.props)) {
                     return (
-                        <Animate transitionName={classNames}
-                            transitionAppear={true} component="" key={Component.name} >
+                        // <Animate transitionName={classNames}
+                        //     transitionAppear={true} component="" key={Component.name} >
                             <div className="app-animate-content" key="app-animate-content" >
                                 <Component  {...this.props} />
                             </div>
-                        </Animate  >
+                        // </Animate  >
                     );
                 }
                 return <Animate transitionName={classNames}

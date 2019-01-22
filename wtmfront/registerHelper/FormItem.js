@@ -10,19 +10,19 @@
 module.exports = (Handlebars) => {
     function renderDataEntry(x) {
         let str = "";
-        if (x.format) {
-            str += ` format="${x.format}" `
-        }
-        if (x.attribute && x.attribute.common) {
-            str += ` common={${JSON.stringify(x.attribute.common)}} `
-        }
-        if (x.example) {
-            str += ` example={${JSON.stringify(x.example)}} `
-        }
+        // if (x.format) {
+        //     str += ` format="${x.format}" `
+        // }
+        // if (x.attribute && x.attribute.common) {
+        //     str += ` common={${JSON.stringify(x.attribute.common)}} `
+        // }
+        // if (x.example) {
+        //     str += ` example={${JSON.stringify(x.example)}} `
+        // }
         if (x.description) {
             str += ` placeholder='${x.description}' `
         }
-        return `<DataEntry Store={Store} ${str} />`
+        return `<Input ${str} />`
     };
     function renderOptions(Attribute, info = false) {
         let initialValue = `initialValue('${Attribute.key}','${Attribute.format || ''}'${info ? ',true' : ''})`;
@@ -44,7 +44,7 @@ module.exports = (Handlebars) => {
             items.push(x)
         })
         return items.map(x => {
-            return `// ${x.description} ${x.type} \n    ${x.key}:${renderDataEntry(x)}`
+            return `/** ${x.description} ${x.type} */  \n    ${x.key}:${renderDataEntry(x)}`
         }).join(",\n    ");
     });
     // 编辑
