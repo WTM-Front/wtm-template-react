@@ -27,7 +27,7 @@ export default class RootRoutes extends React.Component<any, any> {
     /**
      * 路由列表
      */
-   public routes: any[] = [
+    public routes: any[] = [
         {
             /**
              * 主页布局 
@@ -58,7 +58,13 @@ export default class RootRoutes extends React.Component<any, any> {
      * 初始化路由数据
      */
     initRouters() {
-        return lodash.map(Pages, (component, key) => {
+        return lodash.map(Pages, (component: any, key) => {
+            if (typeof component === "object") {
+                return {
+                    "path": component.path,
+                    "component": this.Loadable(component.component)
+                };
+            }
             return {
                 "path": "/" + key,
                 "component": this.Loadable(component)
@@ -148,9 +154,9 @@ export default class RootRoutes extends React.Component<any, any> {
                     return (
                         // <Animate transitionName={classNames}
                         //     transitionAppear={true} component="" key={Component.name} >
-                            <div className="app-animate-content" key="app-animate-content" >
-                                <Component  {...this.props} />
-                            </div>
+                        <div className="app-animate-content" key="app-animate-content" >
+                            <Component  {...this.props} />
+                        </div>
                         // </Animate  >
                     );
                 }

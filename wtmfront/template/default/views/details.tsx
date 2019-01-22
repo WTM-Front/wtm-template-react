@@ -84,35 +84,7 @@ class InsertForm extends React.Component<any, any> {
         const { getFieldDecorator } = form;
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <DrawerFormItem submit>
-                <FormItem label="账号" {...formItemLayout}>
-                    {getFieldDecorator('ITCode', {
-                        rules: [{ "required": true, "message": "账号不能为空" }],
-                    })(Models.ITCode)}
-                </FormItem>
-                <FormItem label="密码" {...formItemLayout}>
-                    {getFieldDecorator('Password', {
-                        rules: [{ "required": true, "message": "密码不能为空" }],
-                    })(Models.Password)}
-                </FormItem>
-                <FormItem label="邮箱" {...formItemLayout}>
-                    {getFieldDecorator('Email', {
-                        rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }]
-                    })(Models.Email)}
-                </FormItem>
-                <FormItem label="姓名" {...formItemLayout}>
-                    {getFieldDecorator('Name', {
-                        rules: [{ "required": true, "message": "姓名不能为空" }],
-                    })(Models.Name)}
-                </FormItem>
-                <FormItem label="性别" {...formItemLayout}>
-                    {getFieldDecorator('Sex', {
-                        rules: [],
-                    })(Models.Sex)}
-                </FormItem>
-                <FormItem label="照片" {...formItemLayout}>
-                    {getFieldDecorator('PhotoId', {
-                    })(<Models.PhotoId {...this.props} />)}
-                </FormItem>
+                {{{InsertFormItem insert}}}
             </DrawerFormItem>
 
         </Form>
@@ -140,35 +112,7 @@ class UpdateForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <DrawerFormItem submit>
-                <FormItem label="账号" {...formItemLayout}>
-                    {getFieldDecorator('itCode', {
-                        rules: [{ "required": true, "message": "账号不能为空" }],
-                        initialValue: details['itCode']
-                    })(Models.ITCode)}
-                </FormItem>
-                <FormItem label="邮箱" {...formItemLayout}>
-                    {getFieldDecorator('email', {
-                        rules: [{ pattern: Regular.email, message: "请输入正确的 邮箱" }],
-                        initialValue: details['email']
-                    })(Models.Email)}
-                </FormItem>
-                <FormItem label="姓名" {...formItemLayout}>
-                    {getFieldDecorator('name', {
-                        rules: [{ "required": true, "message": "姓名不能为空" }],
-                        initialValue: details['name']
-                    })(Models.Name)}
-                </FormItem>
-                <FormItem label="性别" {...formItemLayout}>
-                    {getFieldDecorator('sex', {
-                        rules: [],
-                        initialValue: String(details['sex'])
-                    })(Models.Sex)}
-                </FormItem>
-                <FormItem label="照片" {...formItemLayout}>
-                    {getFieldDecorator('PhotoId', {
-                        initialValue: details['photoId']
-                    })(<Models.PhotoId {...this.props} initialValue={Store.onGetFile(details['photoId'])} />)}
-                </FormItem>
+                 {{{EditFormItem insert}}}
             </DrawerFormItem>
         </Form>
     }
@@ -182,21 +126,7 @@ class InfoForm extends React.Component<any, any> {
         const details = { ...Store.details };
         return <Form >
             <DrawerFormItem>
-                <FormItem label="账号" {...formItemLayout}>
-                    <span>{details['itCode']}</span>
-                </FormItem>
-                <FormItem label="邮箱" {...formItemLayout}>
-                    <span>{details['email']}</span>
-                </FormItem>
-                <FormItem label="姓名" {...formItemLayout}>
-                    <span>{details['name']}</span>
-                </FormItem>
-                <FormItem label="头像" {...formItemLayout}>
-                    <span>
-                        {/* <img style={{ width: 200 }} src={Store.onGetFile(details['photoId'])} /> */}
-                        <ToImg download={Store.onFileDownload(details['photoId'])} url={Store.onGetFile(details['photoId'])} />
-                    </span>
-                </FormItem>
+                {{{InfoFormItem insert}}}
             </DrawerFormItem>
         </Form>
     }

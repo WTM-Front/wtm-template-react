@@ -6,7 +6,7 @@
  * @desc [description] .
  */
 import * as React from 'react';
-import { message, notification, List, Row, Col } from 'antd';
+import { message, notification, List, Row, Col, Button } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import { Request } from 'utils/Request';
 import lodash from 'lodash';
@@ -79,24 +79,25 @@ export default class Store {
       method: "get"
     }
   };
+  /** 默认排序 */
+  DefaultSort = ""
   /** 格式化数据参数 */
   Format = {
     date: "YYYY-MM-DD",
     dateTime: "YYYY-MM-DD HH:mm:ss",
   }
   /** Ajax   */
-  Request = new Request("/api");
+  Request = new Request("/masterdata");
   /** 搜索数据参数 */
   searchParams: any = {
 
   }
   /** 数据列表 */
   @observable dataSource = {
-    Count: 0,
-    Data: [],
-    Page: 1,
-    Limit: 10,
-    PageCount: 1
+    count: 0,
+    list: [],
+    pageNo: 1,
+    pageSize: 10
   }
   /** 多选行 key */
   @observable selectedRowKeys = [];
@@ -158,28 +159,32 @@ export default class Store {
    * @param Page 页码
    * @param Limit 数据条数
    */
-  async onSearch(search: any = {}, SortInfo: any = "", Page: number = 1, Limit: number = 10) {
+  async onSearch(search: any = {}, sort: string = this.DefaultSort, pageNo: number = 1, pageSize: number = 10) {
     if (this.pageState.loading == true) {
       return message.warn('数据正在加载中')
     }
     this.onPageState("loading", true);
     this.searchParams = { ...this.searchParams, ...search };
     search = {
-      Page,
-      Limit,
-      SortInfo,
-      // searcher: this.searchParams
-      ...this.searchParams
+      pageNo,
+      pageSize,
+      sort,
+      searcher: this.searchParams
     }
     const method = this.Urls.search.method;
     const src = this.Urls.search.src;
     try {
       const res = await this.Request[method](src, search).map(data => {
-        if (data.Data) {
-          data.Data = data.Data.map((x, i) => {
+        if (data.list) {
+          data.list = data.list.map((x, i) => {
             // antd table 列表属性需要一个唯一key
-            return { key: x[this.IdKey], ...x }
+            return { key: i, ...x }
           })
+        } else {
+          notification.warn({
+            message: '返回数据并为标准table数据类型'
+          })
+          // message.warn('返回数据并为标准table数据类型')
         }
         return data
       }).toPromise()
@@ -215,7 +220,7 @@ export default class Store {
       if (this.pageState.loadingEdit) {
         return
       }
-      const details = { Entity: { ...this.details, ...params } }
+      const details = { ...this.details, ...params }
       this.onPageState("loadingEdit", true);
       let res = null;
       // 添加 | 修改
@@ -224,10 +229,11 @@ export default class Store {
       } else {
         res = await this.onInsert(details)
       }
-      this.onSearch()
+      this.onSearch();
+      this.onPageState("visibleEdit", false)
       return res
     } catch (error) {
-      this.onErrorMessage(Update ? "修改失败" : "添加失败", lodash.map(error, (value, key) => ({ value, key })))
+      this.onErrorMessage(error)
     }
     finally {
       this.onPageState("loadingEdit", false)
@@ -257,21 +263,30 @@ export default class Store {
   }
   /**
    * 删除
-   * @param Id 
+   * @param params 
    */
-  async onDelete(Id: string) {
+  async onDelete(params) {
     try {
-      // params = params.map(x => x[this.IdKey])
+      console.log(params);
+      if (!params) {
+        return notification.warn({
+          message: '没有选择任何数据'
+        })
+      }
+      if (!Array.isArray(params)) {
+        params = [params];
+      }
+      params = params.map(x => x[this.IdKey])
       const method = this.Urls.delete.method;
-      const src = this.Urls.delete.src + "/" + Id;
-      const res = await this.Request[method](src).toPromise()
-      message.success('删除成功')
+      const src = this.Urls.delete.src;
+      const res = await this.Request[method](src, params).toPromise()
       this.onSelectChange([]);
       // 刷新数据
       this.onSearch();
+      notification.success({ message: "删除成功" })
       return res
     } catch (error) {
-      message.error('删除失败')
+      notification.error({ message: "删除失败" })
     }
   }
   /**
@@ -280,37 +295,68 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.fileUpload.src)
+    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.import.src)
     return {
       name: 'file',
       multiple: true,
       accept: ".xlsx,.xls",
       action: action,
+      // 重写默认请求
+      customRequest: (option) => {
+        return this.Request.customRequest(option, "blob")
+      },
       onChange: info => {
         const status = info.file.status
-        console.log(status);
         // NProgress.start();
-        if (status !== 'uploading') {
+        if (status !== 'uploading' && process.env.NODE_ENV == "development") {
+          console.log(info.file, info.fileList)
         }
         if (status === 'done') {
-          const response = info.file.response
-          if (typeof response.id === "string") {
-            // message.success(`${info.file.name} 上传成功`);
-            this.onImport(response.id)
+          const blob = info.file.response
+          // NProgress.done();
+          if (blob.type == "application/json") {
+            const reader = new FileReader();
+            reader.addEventListener("load", (evt: any) => {
+              try {
+                const result = JSON.parse(evt.target.result)
+                if (result.status == 200) {
+                  // 刷新数据
+                  this.onSearch();
+                  notification.success({
+                    message: `${info.file.name} 导入成功`
+                  })
+                } else {
+                  throw result.message
+                }
+              } catch (error) {
+                notification.error({
+                  message: `${info.file.name} 导入失败`,
+                  description: String(error)
+                })
+              }
+            });
+            reader.readAsText(blob);
           } else {
-            message.error(`${info.file.name} ${response.message}`)
+            const filedow = this.Request.onCreateBlob(blob);
+            notification.error({
+              duration: 10,
+              key: "import",
+              message: `${info.file.name} 导入失败`,
+              btn: <Button type="primary" size="small" onClick={() => {
+                notification.close("import");
+                filedow.click();
+              }}>
+                下载文件
+            </Button>
+            })
           }
         } else if (status === 'error') {
-          message.error(`${info.file.name} 上传失败`)
+          // message.error(`${info.file.name} file upload failed.`)
+          notification.error({
+            message: `${info.file.name} 导入失败`
+          })
         }
-      },
-      onRemove: (file) => {
-        console.log(file);
-        const response = file.response
-        if (typeof response.id === "string") {
-          this.onFileDelete(response.id)
-        }
-      },
+      }
     }
   }
   /**
@@ -360,7 +406,7 @@ export default class Store {
       this.onPageState("visiblePort", false)
       return res
     } catch (error) {
-      this.onErrorMessage("导入失败", error.Data.map(x => ({ key: x.ID, value: x.Message })))
+      this.onErrorMessage(error)
     }
   }
   /**
@@ -401,11 +447,11 @@ export default class Store {
    * @param message 
    * @param dataSource 
    */
-  onErrorMessage(message, dataSource: { key: string, value: string }[]) {
+  onErrorMessage(message, dataSource?: { key: string, value: string }[]) {
     notification.error({
       duration: 5,
       message: message,
-      description: <List
+      description: dataSource && <List
         itemLayout="horizontal"
         dataSource={dataSource}
         renderItem={item => (

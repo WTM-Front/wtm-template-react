@@ -1,7 +1,7 @@
-import { Col, Form } from 'antd';
-import DataEntry from './DataEntry';
+import { Col, Form, Input, Button } from 'antd';
+import { DecoratorsSearch } from 'components/dataView/header/search';
 import * as React from 'react';
-import { DecoratorsTableHeader } from 'wtm/components/table/tableHeader';
+import Models from './models';
 import Store from '../store';
 const FormItem = Form.Item;
 const colLayout = {
@@ -20,21 +20,22 @@ const formItemLayout = {
     },
 };
 /**
- * 组件继承 支持重写,
+ * 搜索条件头
  */
-@DecoratorsTableHeader({
+@DecoratorsSearch({
     Store,
-    renderItem: (props) => {
-        const { form, initialValue } = props;
-        const { getFieldDecorator } = form;
+    FormItems: ({ getFieldDecorator }) => {
+        const { searchParams } = Store
         return [
             {{{HeaderFormItem search}}}
         ]
     }
 })
-export default class HeaderComponent extends React.Component<any, any>{
+export default class extends React.Component<any, any> {
+    shouldComponentUpdate() {
+        return false
+    }
     render() {
-        return <div></div>
+        return this.props.children
     }
 }
-

@@ -10,7 +10,7 @@ import { Divider, Popconfirm } from 'antd';
  */
 export default class extends React.Component<any, any> {
     async onDelete(data) {
-        Store.onDelete(data.ID)
+        Store.onDelete(data)
     }
     async onUpdate(data) {
         Store.onModalShow(data, "Update")
@@ -28,7 +28,7 @@ export default class extends React.Component<any, any> {
             dataIndex: 'Action',
             // fixed: 'right',
             render: (text, record) => {
-                return <div style={{ whiteSpace: "nowrap", width: 155, textAlign: "center" }}>
+                return <div >
                     <a onClick={this.onInfo.bind(this, record)} >详情</a>
                     <Visible visible={Store.Actions.update}>
                         <Divider type="vertical" />
@@ -54,7 +54,7 @@ export default class extends React.Component<any, any> {
  * @param record 
  */
 const columnsRender = (text, record) => {
-    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
+    return <div  title={text}>
         <span>{text}</span>
     </div>
 }
@@ -64,37 +64,5 @@ const columnsRender = (text, record) => {
  * title:表格显示的中文标题
  */
 const columns = [
-    {
-        dataIndex: "ID",
-        title: "ID",
-        render: columnsRender
-    },
-    {
-        dataIndex: "ITCode",
-        title: "ITCode",
-        render: columnsRender
-    }, {
-        dataIndex: "Name",
-        title: "Name",
-        render: columnsRender
-    },
-    {
-        dataIndex: "PhotoId",
-        title: "PhotoId",
-        render: (text, record) => {
-            return <div>
-                <ToImg style={{ height: 60, width: 100 }} download={Store.onFileDownload(text)} url={Store.onGetFile(text)} />
-            </div>
-        }
-    },
-    {
-        dataIndex: "Roles",
-        title: "Roles",
-        render: columnsRender
-    },
-    {
-        dataIndex: "Sex",
-        title: "Sex",
-        render: columnsRender
-    }
+    {{{ JSONColumns columns }}}
 ]

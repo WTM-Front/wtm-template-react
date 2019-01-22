@@ -132,16 +132,15 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
      * @param sorter 
      */
     onChange(page, filters, sorter) {
-        let sort: any = "";
+        let sort = "";
         if (sorter.columnKey) {
             if (sorter.order == 'descend') {
-                sort = { Direction: "Desc", Property: sorter.columnKey }
-                // sort = `${sorter.columnKey} desc`
+                sort = `${sorter.columnKey} desc`
             } else {
-                sort = { Direction: "Asc", Property: sorter.columnKey }
-                // sort = `${sorter.columnKey} asc`
+                sort = `${sorter.columnKey} asc`
             }
         }
+        // this.Store.searchParamSorter = sorter;
         this.Store.onSearch({}, sort, page.current, page.pageSize)
     }
     /**
@@ -200,7 +199,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
 
     private rowDom: HTMLDivElement;
     componentDidMount() {
-        this.Store.onSearch({}, "", this.Store.dataSource.Page, this.Store.dataSource.Limit);
+        this.Store.onSearch({}, "", this.Store.dataSource.pageNo, this.Store.dataSource.pageSize);
         this.initColumns();
     }
     componentWillUnmount() {
@@ -208,7 +207,8 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
 
     render() {
         const dataSource = this.Store.dataSource;
-        if (dataSource.Data) {
+        console.log(dataSource);
+        if (dataSource.list) {
             const columns = this.onGetColumns();
             return (
                 <Row ref={e => this.rowDom = ReactDOM.findDOMNode(e) as any}>
@@ -216,7 +216,7 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                         bordered
                         size="middle"
                         components={TableUtils.components}
-                        dataSource={[...dataSource.Data]}
+                        dataSource={[...dataSource.list]}
                         onChange={this.onChange.bind(this)}
                         columns={columns}
                         scroll={TableUtils.onGetScroll(columns)}
@@ -227,11 +227,11 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
                                 // hideOnSinglePage: true,//只有一页时是否隐藏分页器
                                 position: "bottom",
                                 showSizeChanger: true,//是否可以改变 pageSize
-                                pageSize: dataSource.Limit,
-                                current: dataSource.Page,
-                                defaultPageSize: dataSource.Limit,
-                                defaultCurrent: dataSource.Page,
-                                total: dataSource.Count
+                                pageSize: dataSource.pageSize,
+                                current: dataSource.pageNo,
+                                defaultPageSize: dataSource.pageSize,
+                                defaultCurrent: dataSource.pageNo,
+                                total: dataSource.count
                             }
                         }
                     />

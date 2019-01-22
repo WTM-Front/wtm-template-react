@@ -109,6 +109,11 @@ export class Request {
                     }
                     switch (res.status) {
                         case 200:
+                            if (res.response.status == 200) {
+                                return res.response.data
+                            } else {
+                                sub.error(res.response.message)
+                            }
                             return res.response
                         default:
                             notification.warn({

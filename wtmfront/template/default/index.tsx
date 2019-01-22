@@ -1,17 +1,26 @@
+import { Divider } from 'antd';
 import * as React from 'react';
-import Header from './components/Header';
-import Details from './components/Details';
-import Body from './components/Body';
-import Store from './store';
-import "./style.less";
+import Details from './views/details';
+import Search from './views/search';
+import Action from './views/action';
+import Table from './views/table';
 
+/**
+ * 页面入口
+ */
 export default class App extends React.Component<any, any> {
+  componentWillMount() {
+    // 权限
+  }
   render() {
     return (
-      <div className="app-table-content">
-        <Header Store={Store} />
-        <Details Store={Store} />
-        <Body Store={Store} />
+      <div className="app-table-content app-page-{{{componentName}}}">
+        <Search {...this.props} >
+          <Action />
+        </Search>
+        <Divider />
+        <Table {...this.props} />
+        <Details {...this.props} />
       </div>
     );
   }

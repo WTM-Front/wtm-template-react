@@ -9,14 +9,25 @@ module.exports = (Handlebars) => {
     Handlebars.registerHelper('JSONStringify', function (person) {
         return JSON.stringify(person, null, 4)
     });
+    Handlebars.registerHelper('JSONUrls', function (person) {
+        return Object.keys(person).map(key => {
+            const url = person[key];
+            return `
+        ${key}:{
+            src: '${url.src}',
+            method: '${url.method}'
+        }`
+        }).join(",")
+    });
     Handlebars.registerHelper('JSONColumns', function (person) {
-        return JSON.stringify(person.filter(x => x.attribute.available).map(x => {
-            return {
-                title: x.description,
-                dataIndex: x.key,
-                format: x.format || '',
-            }
-        }), null, 4)
+        return person.filter(x => x.attribute.available).map(x => {
+            return `
+        {
+            title: '${x.description}',
+            dataIndex: '${x.key}',
+            render: columnsRender,
+        }`
+        }).join(",")
     });
 }
 

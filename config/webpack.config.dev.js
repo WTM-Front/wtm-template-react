@@ -87,8 +87,8 @@ module.exports = (config, env) => {
                     options: {
                         useCache: true,
                         // transpileOnly: true,
-                        // errorsAsWarnings: true,
-                        usePrecompiledFiles: true,
+                        errorsAsWarnings: true,
+                        // usePrecompiledFiles: true,
                     }
                 },
                 {

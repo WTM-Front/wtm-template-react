@@ -26,15 +26,15 @@ export default class IApp extends React.Component<any, any> {
      * 多选删除
      */
     async onDelete() {
-        const params = Store.dataSource.Data.filter(x => Store.selectedRowKeys.some(y => y == x.key));
-        // await Store.onDelete(params)
+        const params = Store.dataSource.list.filter(x => Store.selectedRowKeys.some(y => y == x.key));
+        await Store.onDelete(params)
     }
     /**
      * 多选修改
      */
     async onUpdate() {
         if (Store.selectedRowKeys.length == 1) {
-            Store.onModalShow(lodash.find(Store.dataSource.Data, ['key', lodash.head(Store.selectedRowKeys)]), "Update")
+            Store.onModalShow(lodash.find(Store.dataSource.list, ['key', lodash.head(Store.selectedRowKeys)]), "Update")
         } else {
             message.warn("请选择一条数据")
         }
@@ -68,16 +68,7 @@ export default class IApp extends React.Component<any, any> {
                     <Button icon="folder-add" onClick={this.onImport.bind(this)}>导入</Button>
                 </Visible>
                 <Divider type="vertical" />
-                <Dropdown overlay={<Menu>
-                    <Menu.Item>
-                        <a onClick={this.onExport.bind(this)}>导出全部</a>
-                    </Menu.Item>
-                    <Menu.Item disabled={disabled}>
-                        <a onClick={this.onExportIds.bind(this)}>导出勾选</a>
-                    </Menu.Item>
-                </Menu>}>
-                    <Button icon="download" >导出</Button>
-                </Dropdown>
+                <Button icon="folder-add" onClick={this.onExport.bind(this)}>导出</Button>
                 <PortComponent />
             </Row>
         );
@@ -104,7 +95,7 @@ class PortComponent extends React.Component<any, any> {
                     <div >
                         导入说明：请下载模版，然后在把信息输入到模版中   <Divider type="vertical" /> <Button icon="download" onClick={() => { Store.onTemplate() }}>下载模板</Button>
                     </div>
-                    <Divider style={{ margin: "5px 0" }} />
+                    <Divider />
                     <Dragger {...Store.importConfig}>
                         <p className="ant-upload-drag-icon">
                             <Icon type="inbox" />

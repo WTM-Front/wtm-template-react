@@ -47,22 +47,31 @@ module.exports = (Handlebars) => {
             return `/** ${x.description} ${x.type} */  \n    ${x.key}:${renderDataEntry(x)}`
         }).join(",\n    ");
     });
+     // 编辑
+     Handlebars.registerHelper('InsertFormItem', function (person) {
+        return person.filter(x => x.attribute.available).map(x => {
+            // const dec = typeAnalysis(x);
+            const options = renderOptions(x);
+            return `
+                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                    {getFieldDecorator('${x.key}', {
+                        rules: ${JSON.stringify(options.rules)},
+                    })(Models.${x.key})}
+                </FormItem>`
+        }).join('');
+    });
     // 编辑
     Handlebars.registerHelper('EditFormItem', function (person) {
         return person.filter(x => x.attribute.available).map(x => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
             return `
-        <Col span={12} >
-            <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-                {getFieldDecorator('${x.key}',{
-                    rules: ${JSON.stringify(options.rules)},
-                    initialValue: ${options.initialValue},
-                })(
-                    DataEntry.${x.key}
-                )}
-            </FormItem> 
-        </Col>`
+                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                    {getFieldDecorator('${x.key}', {
+                        rules: ${JSON.stringify(options.rules)},
+                        initialValue: details['${x.key}'],
+                    })(Models.${x.key})}
+                </FormItem>`
         }).join('');
     });
     // 详情信息
@@ -72,11 +81,9 @@ module.exports = (Handlebars) => {
             // delete x.format;
             const options = renderOptions(x, true);
             return `
-        <Col span={12} >
-            <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-               <span>{${options.initialValue}}</span>
-            </FormItem> 
-        </Col>`
+                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                    <span>{details['${x.key}']}</span>
+                </FormItem>`
         }).join('');
     });
     Handlebars.registerHelper('HeaderFormItem', function (person) {
@@ -84,15 +91,13 @@ module.exports = (Handlebars) => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
             return `
-            <Col {...colLayout} key='${x.key}'>
-                <FormItem label="${x.description || '未配置说明'}" {...formItemLayout}>
-                    {getFieldDecorator('${x.key}',{
-                        initialValue: ${options.initialValue},
-                    })(
-                        DataEntry.${x.key}
-                    )}
-                </FormItem>
-            </Col> `
+                <Col {...colLayout} key="${x.key}">
+                    <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                        {getFieldDecorator('${x.key}', {
+                            initialValue: searchParams['${x.key}'],
+                        })(Models.${x.key})}
+                    </FormItem>
+                </Col>`
         }).join(',');
     });
 }
