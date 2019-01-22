@@ -5,7 +5,7 @@ import Animate from 'rc-animate';
 import * as React from 'react';
 import store from 'store/index';
 import './style.less';
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { Tab, UserName, Password, Mobile, Captcha, Submit }: any = Login;
 export default class LoginDemo extends React.Component {
   state = {
     notice: '',
@@ -52,12 +52,12 @@ export default class LoginDemo extends React.Component {
                   this.state.notice &&
                   <Alert style={{ marginBottom: 24 }} message={this.state.notice} type="error" showIcon closable />
                 }
-                {/* <UserName name="username" />
-                <Password name="password" /> */}
+                <UserName name="username" />
+                <Password name="password" />
               </Tab>
               <Tab key="tab2" tab="Mobile">
-                {/* <Mobile name="mobile" />
-                <Captcha onGetCaptcha={() => console.log('Get captcha!')} name="captcha" /> */}
+                <Mobile name="mobile" />
+                <Captcha onGetCaptcha={() => console.log('Get captcha!')} name="captcha" />
               </Tab>
               <div>
                 <Checkbox checked={this.state.autoLogin} onChange={this.changeAutoLogin}>Keep me logged in</Checkbox>

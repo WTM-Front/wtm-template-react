@@ -9,9 +9,9 @@ module.exports = {
     // 菜单写入 文件
     subMenu: "src/subMenu.json",
     // 生成组件存放路径
-    containers: "src/containers",
+    containers: "src/pages",
     // api 地址
-    apiUrl: "http://10.122.45.213:8000",
+    // apiUrl: "http://10.122.45.213:8000",
     // swagger doc 地址
     swaggerDoc: "http://10.122.45.213:8000/v2/api-docs",
     // 规范 接口
