@@ -27,42 +27,6 @@
                     "Children": []
                 }
             ]
-        },
-        {
-            "Key": "301f84d3-5a77-4b30-92c4-9c723ed29356",
-            "Name": "用户",
-            "Icon": "menu-fold",
-            "Path": "/test",
-            "Component": "test",
-            "Action": [],
-            "Children": []
-        },
-        {
-            "Key": "c8a3a8ef-beb6-4bd8-9b73-eda7f9f6e43a",
-            "Name": "类别大类",
-            "Icon": "menu-fold",
-            "Path": "/type",
-            "Component": "type",
-            "Action": [],
-            "Children": []
-        },
-        {
-            "Key": "cfa4dee0-71e9-4dcc-b65f-a58679b24e6c",
-            "Name": "共同",
-            "Icon": "menu-fold",
-            "Path": "/publicS",
-            "Component": "publicS",
-            "Action": [],
-            "Children": []
-        },
-        {
-            "Key": "76571ed6-8232-4042-bd83-36ae03f6b9d1",
-            "Name": "啊啊啊",
-            "Icon": "menu-fold",
-            "Path": "/tesssss",
-            "Component": "tesssss",
-            "Action": [],
-            "Children": []
         }
     ]
 }

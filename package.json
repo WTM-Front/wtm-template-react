@@ -5,7 +5,9 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "rimraf ./build && react-app-rewired build",
-    "wtm": "wtm server",
+    "wtm": "npm run update && npm run server",
+    "update": "wtm update swagger",
+    "server": "wtm server",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
