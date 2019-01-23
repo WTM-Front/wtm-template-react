@@ -207,7 +207,6 @@ export default class TableComponent extends React.Component<ITablePorps, any> {
 
     render() {
         const dataSource = this.Store.dataSource;
-        console.log(dataSource);
         if (dataSource.list) {
             const columns = this.onGetColumns();
             return (

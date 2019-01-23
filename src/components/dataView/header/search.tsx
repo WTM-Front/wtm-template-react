@@ -46,7 +46,6 @@ export default class SearchComponent extends React.Component<any, any> {
             if (!err) {
                 // 转换时间对象  moment 对象 valueOf 为时间戳，其他类型数据 为原始数据。
                 // values = mapValues(values, this.Store.Format.date)
-                console.log(values);
                 this.Store.onSearch(values)
             }
         });

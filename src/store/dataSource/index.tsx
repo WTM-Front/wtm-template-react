@@ -193,7 +193,8 @@ export default class Store {
       })
       return res
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      this.onErrorMessage(error)
     } finally {
       this.onPageState("loading", false)
     }

@@ -85,14 +85,14 @@ export class Request {
                         return true
                     }
                     if (ajax instanceof Rx.AjaxError) {
+                        const { response } = ajax;
                         // 返回 业务处理错误
-                        if (lodash.includes(this.catchStatus, ajax.status)) {
-                            sub.error(ajax.response)
-                            if (ajax.response) {
-                                return false
-                            }
+                        if (response && lodash.includes(this.catchStatus, ajax.status)) {
+                            sub.error(response)
+                            return false
                         }
-                        notification['error']({
+                        sub.error(null)
+                        notification.error({
                             key: ajax.request.url,
                             message: ajax.status,
                             duration: 5,
