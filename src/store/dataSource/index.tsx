@@ -9,6 +9,8 @@ import * as React from 'react';
 import { message, notification, List, Row, Col, Button } from 'antd';
 import { action, computed, observable, runInAction } from 'mobx';
 import { Request } from 'utils/Request';
+import RequestFiles from 'utils/RequestFiles';
+
 import lodash from 'lodash';
 export default class Store {
   constructor() {
@@ -296,7 +298,7 @@ export default class Store {
    */
   @computed
   get importConfig() {
-    const action = this.Request.compatibleUrl(this.Request.address, this.Urls.import.src)
+    const action = this.Request.compatibleUrl(this.Request.target, this.Urls.import.src)
     return {
       name: 'file',
       multiple: true,
@@ -338,7 +340,7 @@ export default class Store {
             });
             reader.readAsText(blob);
           } else {
-            const filedow = this.Request.onCreateBlob(blob);
+            const filedow = RequestFiles.onCreateBlob(blob);
             notification.error({
               duration: 10,
               key: "import",
@@ -379,7 +381,7 @@ export default class Store {
   onGetFile(id) {
     if (id) {
       const src = this.Urls.fileGet.src;
-      return `${this.Request.address}${src}/${id}`
+      return `${this.Request.target}${src}/${id}`
     }
   }
   /**
@@ -389,7 +391,7 @@ export default class Store {
   onFileDownload(id) {
     if (id) {
       const src = this.Urls.fileDownload.src;
-      return `${this.Request.address}${src}/${id}`
+      return `${this.Request.target}${src}/${id}`
     }
   }
   /**
@@ -415,7 +417,7 @@ export default class Store {
    * @param params 筛选参数
    */
   async onExport(params = this.searchParams) {
-    await this.Request.download({
+    await RequestFiles.download({
       url: this.Urls.export.src,
       method: this.Urls.export.method,
       body: params
@@ -427,7 +429,7 @@ export default class Store {
    */
   async onExportIds() {
     if (this.selectedRowKeys.length > 0) {
-      await this.Request.download({
+      await RequestFiles.download({
         url: this.Urls.exportIds.src,
         method: this.Urls.exportIds.method,
         body: [...this.selectedRowKeys]
@@ -438,7 +440,7 @@ export default class Store {
   * 数据模板
   */
   async onTemplate() {
-    await this.Request.download({
+    await RequestFiles.download({
       url: this.Urls.template.src,
       method: this.Urls.template.method
     })

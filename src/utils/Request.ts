@@ -10,6 +10,8 @@ import { message, notification } from "antd";
 import NProgress from 'nprogress';
 import lodash from 'lodash';
 import moment from 'moment';
+import GlobalConfig from 'global.config';
+
 interface Preview {
     data: any
     message: string
@@ -32,14 +34,14 @@ export class Request {
      */
     constructor(address?, public newMap?) {
         if (typeof address === "string") {
-            this.address = address;
+            this.target = address;
         }
         this.getHeaders();
     }
     /** 
      * 请求路径前缀
      */
-    address = '/api/'
+    target = GlobalConfig.target
     /**
      * 请求头
      */
@@ -60,7 +62,7 @@ export class Request {
     /**
      * 请求超时设置
      */
-    private timeout = 10000;
+    protected timeout = 10000;
     /**
      * 抛出 状态 
      */
@@ -194,7 +196,7 @@ export class Request {
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body, true);
         body = this.formatBody(newParams.body);
-        url = this.compatibleUrl(this.address, newParams.url, body as any);
+        url = this.compatibleUrl(this.target, newParams.url, body as any);
         return this.AjaxObservable(Rx.Observable.ajax.get(url, headers))
     }
     /**
@@ -208,7 +210,7 @@ export class Request {
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
-        url = this.compatibleUrl(this.address, newParams.url);
+        url = this.compatibleUrl(this.target, newParams.url);
         return this.AjaxObservable(Rx.Observable.ajax.post(url, body, headers))
     }
     /**
@@ -222,7 +224,7 @@ export class Request {
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body);
         body = this.formatBody(newParams.body, "body", headers);
-        url = this.compatibleUrl(this.address, newParams.url);
+        url = this.compatibleUrl(this.target, newParams.url);
         return this.AjaxObservable(Rx.Observable.ajax.put(url, body, headers))
     }
     /**
@@ -236,79 +238,8 @@ export class Request {
         headers = { ...this.headers, ...headers };
         const newParams = this.parameterTemplate(url, body, true);
         body = this.formatBody(newParams.body);
-        url = this.compatibleUrl(this.address, newParams.url, body as any);
+        url = this.compatibleUrl(this.target, newParams.url, body as any);
         return this.AjaxObservable(Rx.Observable.ajax.delete(url, headers))
-    }
-    /** 文件获取状态 */
-    private downloadLoading = false
-    /**
-     * 下载文件
-     * @param AjaxRequest 
-     * @param fileType 
-     * @param fileName 
-     */
-    async download(AjaxRequest: Rx.AjaxRequest, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
-        this.getHeaders();
-        if (this.downloadLoading) {
-            return message.warn('文件获取中，请勿重复操作~')
-        }
-        this.downloadLoading = true;
-        this.NProgress()
-        AjaxRequest.url = this.compatibleUrl(this.address, AjaxRequest.url);
-        AjaxRequest = {
-            // url: url,
-            method: "post",
-            responseType: "blob",
-            timeout: this.timeout,
-            headers: this.headers,
-            ...AjaxRequest
-        }
-        if (AjaxRequest.body) {
-            AjaxRequest.body = this.formatBody(AjaxRequest.body, "body", AjaxRequest.headers);
-        }
-        try {
-            const result = await Rx.Observable.ajax(AjaxRequest).toPromise();
-            this.onCreateBlob(result.response, fileType, fileName).click();
-            notification.success({
-                key: "download",
-                message: `文件下载成功`,
-                description: ''
-            })
-        } catch (error) {
-            notification.error({
-                key: "download",
-                message: '文件下载失败',
-                description: error.message,
-            });
-        }
-        finally {
-            this.NProgress("done")
-            this.downloadLoading = false;
-        }
-    }
-    /**
-     * 创建二进制文件
-     * @param response 
-     */
-    onCreateBlob(response, fileType = '.xls', fileName = moment().format("YYYY_MM_DD_hh_mm_ss")) {
-        const blob = response;
-        const a = document.createElement('a');
-        const downUrl = window.URL.createObjectURL(blob);
-        a.href = downUrl;
-        switch (blob.type) {
-            case 'application/vnd.ms-excel':
-                a.download = fileName + '.xls';
-                break;
-            default:
-                a.download = fileName + fileType;
-                break;
-        }
-        a.addEventListener("click", () => {
-            setTimeout(() => {
-                window.URL.revokeObjectURL(downUrl);
-            }, 1000);
-        }, false);
-        return a;
     }
     /**
      * 重写 Upload 默认请求  https://ant.design/components/upload-cn/#onChange
@@ -393,7 +324,7 @@ export class Request {
     jsonp(url, body?: { [key: string]: any } | string, callbackKey = 'callback') {
         this.getHeaders();
         body = this.formatBody(body);
-        url = this.compatibleUrl(this.address, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
+        url = this.compatibleUrl(this.target, url, `${body || '?time=' + new Date().getTime()}&${callbackKey}=`);
         return new Rx.Observable(observer => {
             this.jsonpCounter++;
             const key = '_jsonp_callback_' + this.jsonpCounter;
