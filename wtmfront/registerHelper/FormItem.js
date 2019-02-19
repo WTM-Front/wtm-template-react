@@ -53,11 +53,11 @@ module.exports = (Handlebars) => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
             return `
-                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                <Form.Item label="${x.description || 'NULL'}" {...formItemLayout}>
                     {getFieldDecorator('${x.key}', {
                         rules: ${JSON.stringify(options.rules)},
                     })(Models.${x.key})}
-                </FormItem>`
+                </Form.Item>`
         }).join('');
     });
     // 编辑
@@ -66,12 +66,12 @@ module.exports = (Handlebars) => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
             return `
-                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                <Form.Item label="${x.description || 'NULL'}" {...formItemLayout}>
                     {getFieldDecorator('${x.key}', {
                         rules: ${JSON.stringify(options.rules)},
                         initialValue: details['${x.key}'],
                     })(Models.${x.key})}
-                </FormItem>`
+                </Form.Item>`
         }).join('');
     });
     // 详情信息
@@ -81,9 +81,9 @@ module.exports = (Handlebars) => {
             // delete x.format;
             const options = renderOptions(x, true);
             return `
-                <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
-                    <span>{details['${x.key}']}</span>
-                </FormItem>`
+                <Form.Item label="${x.description || 'NULL'}" {...formItemLayout}>
+                    <span>{lodash.get(details,"${x.key}", "")}</span>
+                </Form.Item>`
         }).join('');
     });
     Handlebars.registerHelper('HeaderFormItem', function (person) {
@@ -91,14 +91,12 @@ module.exports = (Handlebars) => {
             // const dec = typeAnalysis(x);
             const options = renderOptions(x);
             return `
-                <Col {...colLayout} key="${x.key}">
-                    <FormItem label="${x.description || 'NULL'}" {...formItemLayout}>
+                    <Form.Item label="${x.description || 'NULL'}" {...formItemLayout}>
                         {getFieldDecorator('${x.key}', {
-                            initialValue: searchParams['${x.key}'],
+                            initialValue:lodash.get(Store.searchParams,"${x.key}"),
                         })(Models.${x.key})}
-                    </FormItem>
-                </Col>`
-        }).join(',');
+                    </Form.Item>`
+        }).join('');
     });
 }
 

@@ -1,0 +1,559 @@
+{
+    "key": "ec4f51af-8f92-4950-8d89-8382a912a068",
+    "name": "产品组操作接口",
+    "componentName": "ttttt",
+    "menuName": "ttttt",
+    "icon": "menu-fold",
+    "description": "Product Group Controller",
+    "template": "default",
+    "actions": [],
+    "urls": {
+        "search": {
+            "src": "/productGroup/search",
+            "method": "post"
+        },
+        "details": {
+            "src": "/productGroup/get/{id}",
+            "method": "get"
+        },
+        "insert": {
+            "src": "/productGroup/add",
+            "method": "post"
+        },
+        "update": {
+            "src": "/productGroup/edit",
+            "method": "post"
+        },
+        "delete": {
+            "src": "/productGroup/delete",
+            "method": "post"
+        },
+        "import": {
+            "src": "/productGroup/import",
+            "method": "post"
+        },
+        "export": {
+            "src": "/productGroup/export",
+            "method": "post"
+        },
+        "template": {
+            "src": "/productGroup/template",
+            "method": "post"
+        }
+    },
+    "idKey": "id",
+    "columns": [
+        {
+            "type": "integer",
+            "description": "主键",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "产品组编号",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组名称",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupName"
+        },
+        {
+            "type": "string",
+            "description": "事业部编号",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "buCode"
+        },
+        {
+            "type": "string",
+            "description": "事业部名称",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "buName"
+        },
+        {
+            "type": "string",
+            "description": "DOA返回仓库编号",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "doaWhCode"
+        },
+        {
+            "type": "string",
+            "description": "DOA返回仓库名称",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "doaWhName"
+        },
+        {
+            "type": "string",
+            "description": "法人编号",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "corpCode"
+        },
+        {
+            "type": "string",
+            "description": "法人",
+            "allowEmptyValue": false,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "corpName"
+        },
+        {
+            "type": "string",
+            "description": "产品组大类编号",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupType"
+        },
+        {
+            "type": "string",
+            "description": "产品组大类",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupTypeName"
+        }
+    ],
+    "search": [
+        {
+            "type": "string",
+            "description": "产品组编号",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 200,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupName"
+        },
+        {
+            "type": "string",
+            "description": "事业部",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "buCode"
+        },
+        {
+            "type": "string",
+            "description": "DOA返回仓库",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "doaWhCode"
+        },
+        {
+            "type": "string",
+            "description": "法人编号",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "corpCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组大类",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupType"
+        }
+    ],
+    "insert": [
+        {
+            "type": "integer",
+            "description": "主键",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "主键 不能为空!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "产品组编号",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "产品组编号 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "产品组编号 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "产品组编号 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 200,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "产品组名称 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "产品组名称 最小长度 0位!"
+                },
+                {
+                    "max": 200,
+                    "message": "产品组名称 最大长度 200位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupName"
+        },
+        {
+            "type": "string",
+            "description": "事业部",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "事业部 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "事业部 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "事业部 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "buCode"
+        },
+        {
+            "type": "string",
+            "description": "DOA返回仓库",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "DOA返回仓库 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "DOA返回仓库 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "doaWhCode"
+        },
+        {
+            "type": "string",
+            "description": "法人编号",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "法人编号 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "法人编号 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "corpCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组大类",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "产品组大类 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "产品组大类 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupType"
+        }
+    ],
+    "update": [
+        {
+            "type": "integer",
+            "description": "主键",
+            "allowEmptyValue": false,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "主键 不能为空!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "id"
+        },
+        {
+            "type": "string",
+            "description": "产品组编号",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "产品组编号 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "产品组编号 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "产品组编号 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组名称",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 200,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "产品组名称 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "产品组名称 最小长度 0位!"
+                },
+                {
+                    "max": 200,
+                    "message": "产品组名称 最大长度 200位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupName"
+        },
+        {
+            "type": "string",
+            "description": "事业部",
+            "allowEmptyValue": false,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "required": true,
+                    "message": "事业部 不能为空!"
+                },
+                {
+                    "min": 0,
+                    "message": "事业部 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "事业部 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "buCode"
+        },
+        {
+            "type": "string",
+            "description": "DOA返回仓库",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "DOA返回仓库 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "DOA返回仓库 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "doaWhCode"
+        },
+        {
+            "type": "string",
+            "description": "法人编号",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "法人编号 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "法人编号 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "corpCode"
+        },
+        {
+            "type": "string",
+            "description": "产品组大类",
+            "allowEmptyValue": true,
+            "minLength": 0,
+            "maxLength": 50,
+            "rules": [
+                {
+                    "min": 0,
+                    "message": "产品组大类 最小长度 0位!"
+                },
+                {
+                    "max": 50,
+                    "message": "产品组大类 最大长度 50位!"
+                }
+            ],
+            "attribute": {
+                "available": true,
+                "update": true
+            },
+            "key": "productGroupType"
+        }
+    ]
+}

@@ -70,16 +70,16 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal
                 width={GlobalConfig.infoTypeWidth}
-                maskClosable={false}
+                // maskClosable={false}
                 destroyOnClose
                 onCancel={onCancel}
                 {...this.props as any}
-                style={this.state.style}
-                title={
-                    <DndTitle styleState={this.state.style as any} onUpdate={style => this.setState({ style })}>
-                        {this.props.title}
-                    </DndTitle>
-                }
+                // style={this.state.style}
+                // title={
+                //     <DndTitle styleState={this.state.style as any} onUpdate={style => this.setState({ style })}>
+                //         {this.props.title}
+                //     </DndTitle>
+                // }
                 footer={<div className="data-view-modal-footer"></div>}
                 className={` ${this.props.className}`}
                 wrapClassName="data-view-modal"

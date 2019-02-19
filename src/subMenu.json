@@ -35,6 +35,14 @@
             "Path": "/user",
             "Component": "user",
             "Children": []
+        },
+        {
+            "Key": "ec4f51af-8f92-4950-8d89-8382a912a068",
+            "Name": "ttttt",
+            "Icon": "menu-fold",
+            "Path": "/ttttt",
+            "Component": "ttttt",
+            "Children": []
         }
     ]
 }

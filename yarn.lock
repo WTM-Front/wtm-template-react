@@ -13432,10 +13432,10 @@ ws@^6.1.0:
   dependencies:
     async-limiter "~1.0.0"
 
-wtm-cli@^1.0.7:
-  version "1.0.7"
-  resolved "http://registry.npm.taobao.org/wtm-cli/download/wtm-cli-1.0.7.tgz#63f1f7dd36b02a98b927c9437715e6f122616b09"
-  integrity sha1-Y/H33TawKpi5J8lDdxXm8SJhawk=
+wtm-cli@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/wtm-cli/-/wtm-cli-1.0.8.tgz#52d2922e362d22bafc9f57061efbc266871f7634"
+  integrity sha512-xwpyWXKgg98E+ZJHnS2ikmQZfnavAreeQi+q3rznX/2RHN/TmqMLn/BU6GjE+oIZPT+ASnnYUbRCFAdwXOqY6w==
   dependencies:
     chalk "^2.4.1"
     commander "^2.16.0"

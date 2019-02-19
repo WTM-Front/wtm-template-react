@@ -1,26 +1,20 @@
-import { Button, Divider, Drawer, Form, Spin } from 'antd';
-import decoForm from 'components/decorators/form';
+import { Form } from 'antd';
+import { InfoShell, InfoShellCol, InfoShellFooter, ToImg, toValues } from 'components/dataView';
+import { DesError, DesForm } from 'components/decorators'; //错误
+import GlobalConfig from 'global.config'; //全局配置
+import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import Regular from 'utils/Regular';
-import ToImg from 'components/dataView/help/toImg';
-import Store from '../store';
-import Models from './models';
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-    },
-};
+import Regular from 'utils/Regular'; //正则
+import Store from '../store'; //页面状态
+import ModelsCreate from './models'; //模型
+const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
+const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow }
 /**
  *  详情 窗口 
  *  根据 类型 显示不同的 窗口
  */
+@DesError
 @observer
 export default class extends React.Component<any, any> {
     /**
@@ -50,30 +44,27 @@ export default class extends React.Component<any, any> {
             Info: "详情"
         };
         const { detailsType, visibleEdit, loadingEdit } = Store.pageState
-        return <Drawer
+        return <InfoShell
             title={enums[detailsType]}
-            className="app-drawer"
-            width={500}
-            placement="right"
-            closable={false}
             onClose={() => { Store.onPageState("visibleEdit", false) }}
             visible={visibleEdit}
-            destroyOnClose={true}
         >
             {this.renderBody(detailsType)}
-        </Drawer>
+        </InfoShell>
     }
 }
 /**
  * 添加表单
  */
-@decoForm
+@DesError
+@DesForm
 @observer
 class InsertForm extends React.Component<any, any> {
     onSubmit(e) {
         e.stopPropagation();
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log("数据", values);
             if (!err) {
                 Store.onEdit(values);
             }
@@ -82,10 +73,11 @@ class InsertForm extends React.Component<any, any> {
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;
+        const Models = ModelsCreate(this.props);
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <DrawerFormItem submit>
-                {{{InsertFormItem insert}}}
-            </DrawerFormItem>
+            <FooterFormItem submit>
+               {{{InsertFormItem insert}}}
+            </FooterFormItem>
 
         </Form>
     }
@@ -93,13 +85,15 @@ class InsertForm extends React.Component<any, any> {
 /**
  * 修改表单
  */
-@decoForm
+@DesError
+@DesForm
 @observer
 class UpdateForm extends React.Component<any, any> {
     onSubmit(e) {
         e.stopPropagation();
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            console.log("数据", values);
             if (!err) {
                 // values = mapValues(values, "YYYY-MM-DD")
                 Store.onEdit(values);
@@ -110,47 +104,42 @@ class UpdateForm extends React.Component<any, any> {
         const { form } = this.props;
         const { getFieldDecorator } = form;
         const details = { ...Store.details };
+        const Models = ModelsCreate(this.props);
         return <Form onSubmit={this.onSubmit.bind(this)}>
-            <DrawerFormItem submit>
-                 {{{EditFormItem insert}}}
-            </DrawerFormItem>
+            <FooterFormItem submit>
+                {{{EditFormItem insert}}}               
+            </FooterFormItem>
         </Form>
     }
 }
 /**
  * 详情
  */
+@DesError
 @observer
 class InfoForm extends React.Component<any, any> {
     render() {
         const details = { ...Store.details };
         return <Form >
-            <DrawerFormItem>
-                {{{InfoFormItem insert}}}
-            </DrawerFormItem>
+            <FooterFormItem>
+                {{{InfoFormItem insert}}}                
+            </FooterFormItem>
         </Form>
     }
 }
 /**
  * Items 外壳
  */
+@DesError
 @observer
-class DrawerFormItem extends React.Component<{ submit?: boolean }, any> {
+class FooterFormItem extends React.Component<{ submit?: boolean }, any> {
     render() {
         const { loadingEdit } = Store.pageState;
-        return < >
-            <div className="app-drawer-formItem">
-                <Spin tip="Loading..." spinning={loadingEdit}>
-                    {this.props.children}
-                </Spin>
-            </div>
-            <div className="app-drawer-btns" >
-                <Button onClick={() => Store.onPageState("visibleEdit", false)} >取消 </Button>
-                {this.props.submit && <>
-                    <Divider type="vertical" />
-                    <Button loading={Store.pageState.loadingEdit} type="primary" htmlType="submit"  >提交 </Button>
-                </>}
-            </div>
-        </>
+        return <InfoShellFooter
+            submit={this.props.submit}
+            loadingEdit={loadingEdit}
+            onCancel={() => Store.onPageState("visibleEdit", false)}>
+            {this.props.children}
+        </InfoShellFooter>
     }
 }

@@ -19,7 +19,7 @@ export default class App extends React.Component<any, any> {
   }
   render() {
     return (
-      <div className="app-page-test app-page-{{{componentName}}}" key="app-page-test">
+      <div className="app-page-test app-page-ttttt" key="app-page-test">
         <Search {...this.props} />
         <Action.pageAction {...this.props} />
         <Table {...this.props} />

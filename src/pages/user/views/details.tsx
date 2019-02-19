@@ -1,12 +1,13 @@
 import { Form } from 'antd';
-import { InfoShell, InfoShellFooter, InfoShellCol, ToImg, toValues } from 'components/dataView';
+import { InfoShell, InfoShellCol, InfoShellFooter, ToImg, toValues } from 'components/dataView';
 import { DesError, DesForm } from 'components/decorators'; //错误
 import GlobalConfig from 'global.config'; //全局配置
+import lodash from 'lodash';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import Regular from 'utils/Regular'; //正则
 import Store from '../store'; //页面状态
-import Models from './models'; //模型
+import ModelsCreate from './models'; //模型
 const formItemLayout = { ...GlobalConfig.formItemLayout };//布局
 const formItemLayoutRow = { ...GlobalConfig.formItemLayoutRow }
 /**
@@ -72,6 +73,7 @@ class InsertForm extends React.Component<any, any> {
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;
+        const Models = ModelsCreate(this.props);
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <Form.Item label="账号" hasFeedback {...formItemLayout} >
@@ -134,6 +136,7 @@ class UpdateForm extends React.Component<any, any> {
         const { form } = this.props;
         const { getFieldDecorator } = form;
         const details = { ...Store.details };
+        const Models = ModelsCreate(this.props);
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <Form.Item label="账号" hasFeedback {...formItemLayout}>
@@ -182,7 +185,7 @@ class InfoForm extends React.Component<any, any> {
         return <Form >
             <FooterFormItem>
                 <Form.Item label="账号" {...formItemLayout}>
-                    <span>{toValues(details['ITCode'], "span")}</span>
+                    <span>{lodash.get(details,"", "")}</span>
                 </Form.Item >
                 <Form.Item label="邮箱" {...formItemLayout}>
                     <span>{toValues(details['Email'], "span")}</span>

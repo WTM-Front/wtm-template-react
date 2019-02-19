@@ -1,51 +1,44 @@
-import Table from 'components/dataView/content/table';
-import Visible from 'components/dataView/help/visible';
-import ToImg from 'components/dataView/help/toImg';
+import { DataViewTable, ToImg } from 'components/dataView';
+import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
-import { Divider, Popconfirm } from 'antd';
+import Action from './action';
+/**
+ * 列 信息配置
+ * 完整参数列表 https://ant.design/components/table-cn/#components-table-demo-dynamic-settings
+ * dataIndex:属性名称 区分大小写
+ * title:表格显示的中文标题
+ */
+const columns = [
+    {{{ JSONColumns columns }}}
+]
 
 /**
  * 表格
  */
+@DesError
 export default class extends React.Component<any, any> {
-    async onDelete(data) {
-        Store.onDelete(data)
-    }
-    async onUpdate(data) {
-        Store.onModalShow(data, "Update")
-    }
-    async onInfo(data) {
-        Store.onModalShow(data, "Info")
-    }
     /**
      * 操作动作
      */
     renderColumns() {
-        return [...columns,
-        {
-            title: 'Action',
-            dataIndex: 'Action',
-            // fixed: 'right',
-            render: (text, record) => {
-                return <div >
-                    <a onClick={this.onInfo.bind(this, record)} >详情</a>
-                    <Visible visible={Store.Actions.update}>
-                        <Divider type="vertical" />
-                        <a onClick={this.onUpdate.bind(this, record)} >修改</a>
-                    </Visible>
-                    <Visible visible={Store.Actions.delete}>
-                        <Divider type="vertical" />
-                        <Popconfirm title="确定删除?" onConfirm={this.onDelete.bind(this, record)} >
-                            <a >删除</a>
-                        </Popconfirm>
-                    </Visible>
-                </div>
-            }
-        }];
+        const tableColumns: any[] = [...columns];
+        // 根据需求 加入行动作
+        if (true) {
+            tableColumns.push(
+                {
+                    title: 'Action',
+                    dataIndex: 'Action',
+                    // fixed: 'right',//固定 列
+                    // width: 160,
+                    render: (text, record) => <Action.rowAction data={record} />
+                }
+            )
+        }
+        return tableColumns
     }
     render() {
-        return <Table Store={Store} columns={this.renderColumns()} />
+        return <DataViewTable Store={Store} columns={this.renderColumns()} />
     }
 }
 /**
@@ -53,16 +46,8 @@ export default class extends React.Component<any, any> {
  * @param text 
  * @param record 
  */
-const columnsRender = (text, record) => {
+function columnsRender(text, record) {
     return <div  title={text}>
         <span>{text}</span>
     </div>
 }
-/**
- * 列 信息配置
- * dataIndex:属性名称 区分大小写
- * title:表格显示的中文标题
- */
-const columns = [
-    {{{ JSONColumns columns }}}
-]
