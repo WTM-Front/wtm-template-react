@@ -1,10 +1,10 @@
 import "./global.less";
 import { notification } from 'antd';
-// import ImgLogo from 'assets/img/logo.png';
-// import ImgUser from 'assets/img/user.png';
+import ImgLogo from 'assets/img/logo.png';
+import ImgUser from 'assets/img/user.png';
 notification.config({
     duration: 3,
-    top: 60
+    top: 10
 });
 export default {
     /**
@@ -12,14 +12,14 @@ export default {
      */
     default: {
         title: "WalkingTec MVVM",
-        // logo: ImgLogo,
-        // avatar: ImgUser,
+        logo: ImgLogo,
+        avatar: ImgUser,
     },
     /**
      * 服务器地址 前缀
      * process.env.NODE_ENV === "development" 根据 环境替换
      */
-    target: "/masterdata",
+    target: "/api",
     /**
      * 请求头
      */
@@ -56,25 +56,10 @@ export default {
      */
     formItemLayout: {
         labelCol: {
-            xs: { span: 24 },
-            sm: { span: 6 },
+            span: 6
         },
         wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
-        },
-    },
-    /**
-     * 占用 一整行 时的配置
-     */
-    formItemLayoutRow: {
-        labelCol: {
-            xs: { span: 24 },
-            sm: { span: 3 },
-        },
-        wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 16 },
+            span: 16
         },
     },
     /**

@@ -195,7 +195,6 @@ export default class Store {
       })
       return res
     } catch (error) {
-      // console.log(error);
       this.onErrorMessage(error)
     } finally {
       this.onPageState("loading", false)
@@ -452,6 +451,7 @@ export default class Store {
    */
   onErrorMessage(message, dataSource?: { key: string, value: string }[]) {
     notification.error({
+      key:"onErrorMessage",
       duration: 5,
       message: message,
       description: dataSource && <List

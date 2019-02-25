@@ -1,5 +1,11 @@
+/**
+ * @author 冷 (https://github.com/LengYXin)
+ * @email lengyingxin8966@gmail.com
+ * @create date 2019-02-24 17:06:31
+ * @modify date 2019-02-24 17:06:31
+ * @desc [description]
+ */
 import { Button, Col, Divider, Drawer, Modal, Row, Spin } from 'antd';
-import { ColProps } from 'antd/lib/col';
 import { DrawerProps } from 'antd/lib/drawer';
 import { ModalProps } from 'antd/lib/modal';
 import { DesError } from 'components/decorators';
@@ -70,16 +76,16 @@ export class InfoShell extends React.Component<DrawerProps | ModalProps, any> {
             const onCancel = (e) => { onClose && onClose(e) }
             return <Modal
                 width={GlobalConfig.infoTypeWidth}
-                // maskClosable={false}
+                maskClosable={false}
                 destroyOnClose
                 onCancel={onCancel}
                 {...this.props as any}
-                // style={this.state.style}
-                // title={
-                //     <DndTitle styleState={this.state.style as any} onUpdate={style => this.setState({ style })}>
-                //         {this.props.title}
-                //     </DndTitle>
-                // }
+                style={this.state.style}
+                title={
+                    <DndTitle styleState={this.state.style as any} onUpdate={style => this.setState({ style })}>
+                        {this.props.title}
+                    </DndTitle>
+                }
                 footer={<div className="data-view-modal-footer"></div>}
                 className={` ${this.props.className}`}
                 wrapClassName="data-view-modal"
@@ -106,9 +112,16 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
     render() {
         const childrens = React.Children.toArray(this.props.children).map((node: any) => {
             try {
+                // console.log(lodash.has(node.props, "label"), node.props)
+
                 // 没有嵌套 col 的自动添加 嵌套的 解除
-                if (lodash.isEqual(lodash.toLower(node.type.name), lodash.toLower("FormItem"))) {
-                    return <InfoShellCol key={node.key}>
+                // if (["fieId", "models", "labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
+                if (lodash.isEqual(node.type.wtmType, 'FormItem') || ["labelCol", "wrapperCol", "label", "hasFeedback"].some(x => lodash.has(node.props, x))) {
+                    const layout = lodash.get(node, "props.layout");
+                    return <InfoShellCol
+                        key={node.key}
+                        layout={layout}
+                    >
                         {node}
                     </InfoShellCol>
                 }
@@ -138,10 +151,13 @@ export class InfoShellFooter extends React.Component<{ loadingEdit: boolean, onC
 /**
  * Items 外壳
  */
-export class InfoShellCol extends React.Component<ColProps, any> {
+export class InfoShellCol extends React.Component<{ layout?: string }, any> {
     columnCount = GlobalConfig.infoColumnCount || 1;
     render() {
-        const colSpan = 24 / this.columnCount;//每列 值
+        let colSpan = 24;
+        if (this.props.layout != "row") {
+            colSpan = 24 / this.columnCount;//每列 值
+        }
         return <Col span={colSpan} {...this.props}>
             {this.props.children}
         </Col>

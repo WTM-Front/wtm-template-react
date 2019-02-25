@@ -15,6 +15,7 @@ function beforeUpload(file) {
     return isJPG //&& isLt2M;
 }
 export default class UploadImg extends React.Component<any, any> {
+    static wtmType = "UploadImg";
     img = new Image();
     viewer: Viewer = new Viewer(this.img);
     state = {
@@ -68,6 +69,9 @@ export default class UploadImg extends React.Component<any, any> {
         // });
     }
     onRemove = (file) => {
+        if (this.props.disabled) {
+            return 
+        }
         const response = file.response
         this.setState({ fileList: [], loading: false }, () => {
             this.onChange(null);
@@ -88,7 +92,7 @@ export default class UploadImg extends React.Component<any, any> {
             </div>
         );
         return (
-            <>
+            <div style={{ minWidth: 105, minHeight: 105 }}>
                 <Upload
                     accept='image/jpeg'
                     listType="picture-card"
@@ -101,7 +105,7 @@ export default class UploadImg extends React.Component<any, any> {
                 >
                     {fileList.length == 0 && uploadButton}
                 </Upload>
-            </>
+            </div>
         );
     }
-}
+}  

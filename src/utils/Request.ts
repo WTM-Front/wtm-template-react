@@ -72,33 +72,55 @@ export class Request {
      * @param Observable 
      */
     private AjaxObservable(Observable: Rx.Observable<Rx.AjaxResponse>) {
-        // 加载进度条
-        this.NProgress();
+
         return new Rx.Observable(sub => {
+            // 加载进度条
+            this.NProgress();
             Observable
                 // 超时时间
                 .timeout(this.timeout)
                 // 错误处理
-                .catch((err: Rx.AjaxError) => Rx.Observable.of(err))
+                .catch((err: Rx.AjaxError | Rx.TimeoutError) => Rx.Observable.of(err))
                 // 过滤请求
                 .filter((ajax) => {
                     this.NProgress("done");
+                    // 数据 Response 
                     if (ajax instanceof Rx.AjaxResponse) {
                         return true
                     }
+                    // 错误
                     if (ajax instanceof Rx.AjaxError) {
                         const { response } = ajax;
                         // 返回 业务处理错误
                         if (response && lodash.includes(this.catchStatus, ajax.status)) {
-                            sub.error(response)
+                            if (response.errors) {
+                                sub.error(null)
+                                notification.error({
+                                    key: ajax.request.url,
+                                    message: response.traceId,
+                                    duration: 5,
+                                    description: response.title,
+                                });
+                            } else {
+                                sub.error(response)
+                            }
                             return false
                         }
-                        sub.error(null)
+                        sub.error({})
                         notification.error({
                             key: ajax.request.url,
                             message: ajax.status,
                             duration: 5,
                             description: `${ajax.request.method}: ${ajax.request.url}`,
+                        });
+                        return false
+                    }
+                    if (ajax instanceof Rx.TimeoutError) {
+                        sub.error({})
+                        notification.error({
+                            key: ajax.name,
+                            message: ajax.message,
+                            duration: 5,
                         });
                         return false
                     }
@@ -121,7 +143,7 @@ export class Request {
                             notification.warn({
                                 message: res.status,
                                 duration: 5,
-                                description: `请配置 处理逻辑`,
+                                description: `请配置 状态 ${res.status} 处理逻辑`,
                             });
                             break;
                     }

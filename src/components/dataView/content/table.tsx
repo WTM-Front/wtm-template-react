@@ -5,16 +5,17 @@
  * @modify date 2018-09-12 18:53:22
  * @desc [description]
 */
-import { Alert, Divider, Row, Table, notification } from 'antd';
+import { Alert, Divider, notification, Table, Switch, Icon } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
+import lodash from 'lodash';
 import { action, observable, runInAction, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import lodash from 'lodash';
 import { Resizable } from 'react-resizable';
 import Rx from 'rxjs';
 import Store from 'store/dataSource';
+import { ToImg } from '../help/toImg';
 import './style.less';
 interface ITablePorps {
     /** 状态 */
@@ -102,7 +103,7 @@ const TableUtils = {
     * 动态设置列宽
     */
     onGetScroll(columns) {
-        let scrollX = this.onGetcolumnsWidth(columns) + TableUtils.selectionColumnWidth - 5;
+        let scrollX = this.onGetcolumnsWidth(columns) //+ TableUtils.selectionColumnWidth;
         // scrollX = scrollX > this.clientWidth ? scrollX : this.clientWidth - 10;
         return {
             x: scrollX,
@@ -241,7 +242,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
             TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch({}, "", this.Store.dataSource.pageNo, this.Store.dataSource.pageSize);
+            this.Store.onSearch({}, "", this.Store.dataSource.pageSize, this.Store.dataSource.pageNo);
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
                 if (this.tableDom.clientWidth > TableUtils.clientWidth) {
@@ -261,35 +262,33 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         if (dataSource.list) {
             const columns = [...this.columns];
             return (
-                <Row >
-                    <Table
-                        ref={this.tableRef}
-                        bordered
-                        size="default"
-                        className="data-view-table"
-                        components={TableUtils.components}
-                        dataSource={[...dataSource.list]}
-                        onChange={this.onChange.bind(this)}
-                        columns={columns}
-                        scroll={TableUtils.onGetScroll(columns)}
-                        rowSelection={this.onRowSelection()}
-                        loading={this.Store.pageState.loading}
-                        pagination={
-                            {
-                                // hideOnSinglePage: true,//只有一页时是否隐藏分页器
-                                position: "bottom",
-                                showSizeChanger: true,//是否可以改变 pageSize
-                                showQuickJumper: true,
-                                pageSize: dataSource.pageSize,
-                                size: "default",
-                                current: dataSource.pageNo,
-                                defaultPageSize: dataSource.pageSize,
-                                defaultCurrent: dataSource.pageNo,
-                                total: dataSource.count
-                            }
+                <Table
+                    ref={this.tableRef}
+                    bordered
+                    size="default"
+                    className="data-view-table"
+                    components={TableUtils.components}
+                    dataSource={[...dataSource.list]}
+                    onChange={this.onChange.bind(this)}
+                    columns={columns}
+                    scroll={TableUtils.onGetScroll(columns)}
+                    rowSelection={this.onRowSelection()}
+                    loading={this.Store.pageState.loading}
+                    pagination={
+                        {
+                            // hideOnSinglePage: true,//只有一页时是否隐藏分页器
+                            position: "bottom",
+                            showSizeChanger: true,//是否可以改变 pageSize
+                            showQuickJumper: true,
+                            pageSize: dataSource.pageSize,
+                            size: "default",
+                            current: dataSource.pageNo,
+                            defaultPageSize: dataSource.pageSize,
+                            defaultCurrent: dataSource.pageNo,
+                            total: dataSource.count
                         }
-                    />
-                </Row>
+                    }
+                />
             );
         } else {
             return <div>
@@ -299,8 +298,34 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
                     message="数据格式并非table标准格式请使用其他模板或者检查接口数据是否有误"
                     type="warning"
                 />
+                <pre style={{ height: 400, background: "#f3f3f3" }}>
+                    <code>{JSON.stringify(dataSource, null, 4)}</code>
+                </pre>
             </div>
         }
 
     }
+}
+/**
+ * 重写 列渲染 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRender(text, record) {
+    if (lodash.isBoolean(text) || text === "true" || text === "false") {
+        text = (text || text === "true") ? <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled defaultChecked /> : <Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} disabled />;
+    }
+    return <div style={{ maxHeight: 60, overflow: "hidden" }} title={text}>
+        <span>{text}</span>
+    </div>
+}
+/**
+ * 重写 图片 函数 
+ * @param text 
+ * @param record 
+ */
+export function columnsRenderImg(text, record) {
+    return <div>
+        <ToImg fileID={text} />
+    </div>
 }
