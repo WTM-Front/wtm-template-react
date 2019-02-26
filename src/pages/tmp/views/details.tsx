@@ -75,7 +75,6 @@ class InsertForm extends React.Component<any, any> {
             // 模型
             models: this.models,
         }
-        console.log(this.models)
         return <Form onSubmit={this.onSubmit.bind(this)}>
             <FooterFormItem submit>
                 <FormItem {...props} fieId="ITCode" />

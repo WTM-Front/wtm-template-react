@@ -142,7 +142,7 @@ export default class Store {
    * @param details 
    * @param detailsType 
    */
-  async onModalShow(details = {}, detailsType: 'Insert' | 'Update' | 'Info' = 'Insert') {
+  async onModalShow(details = {}, detailsType: 'Insert' | 'Update' | 'Info' | string = 'Insert') {
     this.onPageState("detailsType", detailsType)
     if (detailsType != "Insert") {
       details = await this.onDetails(details)
@@ -451,7 +451,7 @@ export default class Store {
    */
   onErrorMessage(message, dataSource?: { key: string, value: string }[]) {
     notification.error({
-      key:"onErrorMessage",
+      key: "onErrorMessage",
       duration: 5,
       message: message,
       description: dataSource && <List

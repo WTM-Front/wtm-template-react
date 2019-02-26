@@ -1,4 +1,4 @@
-import { DataViewTable, ToImg } from 'components/dataView';
+import { columnsRender, columnsRenderImg, DataViewTable } from 'components/dataView';
 import { DesError } from 'components/decorators';
 import React from 'react';
 import Store from '../store';
@@ -27,10 +27,10 @@ export default class extends React.Component<any, any> {
         if (true) {
             tableColumns.push(
                 {
-                    title: 'Action',
+                    title: '操作',
                     dataIndex: 'Action',
-                    // fixed: 'right',//固定 列
-                    // width: 160,
+                    fixed: 'right',//固定 列
+                    width: 160,
                     render: (text, record) => <Action.rowAction data={record} />
                 }
             )
@@ -40,14 +40,4 @@ export default class extends React.Component<any, any> {
     render() {
         return <DataViewTable Store={Store} columns={this.renderColumns()} />
     }
-}
-/**
- * 重写 列渲染 函数 
- * @param text 
- * @param record 
- */
-function columnsRender(text, record) {
-    return <div  title={text}>
-        <span>{text}</span>
-    </div>
 }

@@ -1,13 +1,14 @@
-import { Input, Select } from 'antd';
-import UploadImg from 'components/form/uploadImg';
-import Transfer from 'components/form/transfer';
-import Selects from 'components/form/select';
+import { Input } from 'antd';
+import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { FormItem } from 'components/dataView';
-import * as React from 'react';
+import Selects from 'components/form/select';
+import Transfer from 'components/form/transfer';
+import UploadImg from 'components/form/uploadImg';
 import lodash from 'lodash';
-
+import * as React from 'react';
 import Regular from 'utils/Regular'; //正则
 import Store from '../store';
+
 /**
  * label  标识
  * rules   校验规则，参考下方文档  https://ant.design/components/form-cn/#components-form-demo-validate-other
@@ -19,12 +20,21 @@ export default {
      * @param props 
      */
     editModels(props?) {
+        const { form } = props;
+        const { getFieldDecorator }: WrappedFormUtils = form;
+
         return {
             /** ITCode */
             ITCode: {
                 label: "账号",
                 rules: [{ "required": true, "message": "账号 不能为空" }],
-                formItem: <Input placeholder="请输入 ITCode" />
+                /**
+                 * 使用 getFieldDecorator 组件 替换默认的 封装组件 
+                 * 需要注意的是 details 中的 Models.editModels(this.props) 需要放到 render 方法中
+                 */
+                formItem: getFieldDecorator("ITCode", {
+
+                })(<Input placeholder="请输入 ITCode" />)
             },
             /** Password */
             Password: {
@@ -113,7 +123,7 @@ export default {
                     dataKey="GroupId"
                 />
             }
-       }
+        }
     },
     /**
      * 渲染 模型

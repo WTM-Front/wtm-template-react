@@ -19,7 +19,7 @@ export default {
      * 服务器地址 前缀
      * process.env.NODE_ENV === "development" 根据 环境替换
      */
-    target: "/api",
+    target: "/masterdata",
     /**
      * 请求头
      */
