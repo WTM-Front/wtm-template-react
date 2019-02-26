@@ -56,7 +56,7 @@ export const ActionEvents = {
      * @param data 
      */
     onDelete(data) {
-        Store.onDelete([lodash.get(data, Store.IdKey)])
+        Store.onDelete([data])
     },
     /**
     * 删除
@@ -112,16 +112,7 @@ class PageAction extends React.Component<any, any> {
                     <Button icon="folder-add" onClick={ActionEvents.onImport}>导入</Button>
                 </Visible>
                 <Divider type="vertical" />
-                <Dropdown overlay={<Menu>
-                    <Menu.Item>
-                        <a onClick={ActionEvents.onExport}>导出全部</a>
-                    </Menu.Item>
-                    <Menu.Item disabled={disabled}>
-                        <a onClick={ActionEvents.onExportIds}>导出勾选</a>
-                    </Menu.Item>
-                </Menu>}>
-                    <Button icon="download" >导出</Button>
-                </Dropdown>
+                <Button icon="download" onClick={ActionEvents.onExport} >导出</Button>
             </Row>
         );
     }

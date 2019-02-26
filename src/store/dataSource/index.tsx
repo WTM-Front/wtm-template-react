@@ -180,7 +180,7 @@ export default class Store {
         if (data.list) {
           data.list = data.list.map((x, i) => {
             // antd table 列表属性需要一个唯一key
-            return { key: i, ...x }
+            return { key: lodash.get(x, this.IdKey, i), ...x }
           })
         } else {
           notification.warn({
@@ -270,15 +270,6 @@ export default class Store {
   async onDelete(params) {
     try {
       console.log(params);
-      if (!params) {
-        return notification.warn({
-          message: '没有选择任何数据'
-        })
-      }
-      if (!Array.isArray(params)) {
-        params = [params];
-      }
-      params = params.map(x => x[this.IdKey])
       const method = this.Urls.delete.method;
       const src = this.Urls.delete.src;
       const res = await this.Request[method](src, params).toPromise()

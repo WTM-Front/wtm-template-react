@@ -242,7 +242,7 @@ export class DataViewTable extends React.Component<ITablePorps, any> {
         try {
             this.tableDom = ReactDOM.findDOMNode(this.tableRef.current) as any;
             TableUtils.clientWidth = this.tableDom.clientWidth;
-            this.Store.onSearch({}, "", this.Store.dataSource.pageSize, this.Store.dataSource.pageNo);
+            this.Store.onSearch({}, "", this.Store.dataSource.pageNo, this.Store.dataSource.pageSize);
             this.initColumns();
             this.resize = Rx.Observable.fromEvent(window, "resize").subscribe(e => {
                 if (this.tableDom.clientWidth > TableUtils.clientWidth) {
